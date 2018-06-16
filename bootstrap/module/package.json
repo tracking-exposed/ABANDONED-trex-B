@@ -1,0 +1,19 @@
+{
+  "name": "@tracking-exposed/module",
+  "description": "",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "license": "GPL-3.0",
+  "keywords": [],
+  "repository": "https://github.com/tracking-exposed/tracking-exposed",
+  "homepage":
+  "https://github.com/tracking-exposed/tracking-exposed/tree/master/packages/module#readme",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "files": ["dist", "src"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "ava": "1.0.0-beta.6"
+  }
+}

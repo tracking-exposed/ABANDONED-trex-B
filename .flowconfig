@@ -1,0 +1,7 @@
+[options]
+include_warnings=true
+esproposal.decorators=ignore
+esproposal.export_star_as=enable
+
+[lints]
+all=warn

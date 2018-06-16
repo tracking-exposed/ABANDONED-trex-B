@@ -1,0 +1,7 @@
+{
+  "require": ["@babel/register"],
+  "sourceMap": false,
+  "instrument": false,
+  "reporter": ["lcov", "text"],
+  "exclude": ["./test-setup.js", "packages/*/test", "packages/*/dist"]
+}

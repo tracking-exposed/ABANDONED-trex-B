@@ -1,0 +1,17 @@
+{
+  "lerna": "2.11.0",
+  "npmClient": "yarn",
+  "useWorkspaces": true,
+  "packages": ["packages/*"],
+  "version": "0.1.0",
+  "commands": {
+    "publish": {
+      "message": "chore(release): publish %s",
+      "cdVersion": "minor",
+      "skipNpm": true,
+      "exact": true,
+      "forcePublish": "*",
+      "conventionalCommits": true
+    }
+  }
+}

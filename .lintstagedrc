@@ -1,0 +1,8 @@
+{
+  "packages/*/src/**/*.js": ["eslint --fix", "git add"],
+  "{commitlint,ava}.config.js": ["eslint --fix", "git add"],
+  "*.json": ["prettier --parser json --write --print-width 100", "git add"],
+  ".babelrc": ["prettier --parser json --write", "git add"],
+  ".lintstagedrc": ["prettier --parser json --write", "git add"],
+  ".nycrc": ["prettier --parser json --write", "git add"]
+}
