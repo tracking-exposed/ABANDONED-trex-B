@@ -39,6 +39,21 @@ $ yarn bootstrap
 $ yarn build
 ```
 
+The data processors are using the new stream feature of [Redis](https://redis.io/) that is still in beta. You need to run at least version 5 of Redis, which at this point is not released and therefore likely not available on your platform. This project provides a [Vagrant](https://www.vagrantup.com/) [file](Vagrantfile) to set up a local development server. See the [installation docs](https://www.vagrantup.com/downloads.html) on how to obtain Vagrant.
+
+To start the development Redis server run in the project root the following command:
+
+```sh
+$ vagrant up
+```
+
+This will start a virtual machine and compile the latest release candidate of Redis 5. The server can be reached on the host machine on `localhost` and port `6379`. To use the Redis client connect to the Vagrant VM and start the client:
+
+```sh
+$ vagrant ssh
+# redis-cli
+```
+
 ### Running linting/tests
 
 `tracking-exposed` uses (ESLint)(https://eslint.org/) for linting, [Flow](https://flow.org/) for type checking and [AVA](https://github.com/avajs/ava) for unit testing.
