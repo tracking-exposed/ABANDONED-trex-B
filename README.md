@@ -1,6 +1,4 @@
-<p align="center">
-  <h1>Tracking Exposed</h1>
-</p>
+# Tracking Exposed
 
 <p align="center">
   <a href="https://tracking.exposed">
