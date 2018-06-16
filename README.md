@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://tracking.exposed">
-    <img alt="Tracking Exposed" src="https://raw.githubusercontent.com/critocrito/tracking-exposed/master/logo.svg">
+    <img alt="Tracking Exposed" src="https://cdn.rawgit.com/critocrito/tracking-exposed/master/logo.svg">
   </a>
 </p>
 
@@ -54,4 +54,4 @@ Check out our [CONTRIBUTING.md](CONTRIBUTING.md) to get started with setting up 
 
 ### How is the repo structured?
 
-This repo is managed as a [monorepo](https://github.com/lerna/lerna) that is composed of many [npm packages](packages/README.md).
+This repo is managed as a [monorepo](https://github.com/lerna/lerna) that is composed of many [npm packages](packages).
