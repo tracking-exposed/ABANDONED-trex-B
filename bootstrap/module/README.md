@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![npm version](https://img.shields.io/npm/v/@nodejs-module-scaffold/module.svg?style=flat)](https://www.npmjs.com/package/@nodejs-module-scaffold/module) [![Build Status](https://travis-ci.org/critocrito/nodejs-module-scaffold.svg?branch=master)](https://travis-ci.org/critocrito/tracking-exposed) [![Coverage Status](https://coveralls.io/repos/github/critocrito/tracking-exposed/badge.svg)](https://coveralls.io/github/critocrito/tracking-exposed)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![npm version](https://img.shields.io/npm/v/@tracking-exposed/module.svg?style=flat)](https://www.npmjs.com/package/@tracking-exposed/module) [![Build Status](https://travis-ci.org/tracking-exposed/tracking-exposed.svg?branch=master)](https://travis-ci.org/tracking-exposed/tracking-exposed) [![Coverage Status](https://coveralls.io/repos/github/tracking-exposed/tracking-exposed/badge.svg)](https://coveralls.io/github/tracking-exposed/tracking-exposed)
 
 - [Usage](#usage)
 - [FAQ](#faq)
