@@ -62,5 +62,15 @@
     "nyc": "^12.0.2",
     "prettier": "^1.13.5",
     "rimraf": "^2.6.2"
+  },
+  "ava": {
+    "require": ["./test-setup.js"],
+    "babel": {
+      "testOptions": {
+        "babelrc": false
+      }
+    },
+    "sources": ["packages/*/src/**/*.js"],
+    "files": ["packages/*/test/**/*.js"]
   }
 }
