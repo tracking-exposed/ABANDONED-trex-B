@@ -1,0 +1,27 @@
+{
+  "name": "@tracking-exposed/processor-cli",
+  "description": "Process events from a stream.",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "bin": {
+    "processorctl": "./bin/processorctl"
+  },
+  "license": "GPL-3.0",
+  "keywords": [],
+  "repository": "https://github.com/tracking-exposed/tracking-exposed",
+  "homepage":
+    "https://github.com/tracking-exposed/tracking-exposed/tree/master/packages/processor-cli#readme",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "files": ["dist", "src"],
+  "devDependencies": {
+    "ava": "1.0.0-beta.6",
+    "flow-bin": "^0.74.0",
+    "ioredis-mock": "^3.9.1",
+    "mock-require": "^3.0.2"
+  },
+  "dependencies": {
+    "find-up": "^3.0.0",
+    "ioredis": "^3.2.2",
+    "yargs": "^11.0.0"
+  }
+}
