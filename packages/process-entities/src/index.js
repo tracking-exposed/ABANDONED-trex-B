@@ -1,0 +1,4 @@
+// @flow
+const add = (x: number, y: number): number => x + y;
+
+export default add;

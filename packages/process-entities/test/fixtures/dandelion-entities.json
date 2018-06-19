@@ -1,0 +1,45 @@
+[
+  {
+    "scope": "https://api.dandelion.eu:443",
+    "method": "GET",
+    "path":
+      "/datatxt/nex/v1?token=token&text=When+you+setup+an+interceptor+for+a+URL+and+that+interceptor+is+used%2C+it+is+removed+from+the+interceptor+list.&min_confidence=0.3",
+    "body": "",
+    "status": 200,
+    "response": [
+      "1f8b08000000000000ff8cd03f4f84401005f0af625ebd07fb070e98d6c6e26ccc591963d6633c37c242608cc585ef6e90f3d0d8d8ed66de9bfc322748681964157c8c9d78095d1c410f278ce20701b9ad02c71ae42a85b1ef0484fbbb1d140e5d7c0935c703837452b8cc29841a9415a529b4b50a12a4e14bfe7d0820bc8af494a61c938ff0167aae834fbae198cebf740936fe999b736d521789d1f99962f46a69c2287f30b935f982b145e62ab7526ef6b7bb2b6eb8e528ff33cd8da7b5f18dfbb5687a9c07f10802472cefeb1f229368f575e9517cdb8360b529377abb31e5de68ca2bca4c62748ee9330000ffff39e9025e91010000"
+    ],
+    "rawHeaders": [
+      "Date",
+      "Mon, 18 Jun 2018 10:59:41 GMT",
+      "Content-Type",
+      "application/json;charset=UTF-8",
+      "Content-Length",
+      "248",
+      "Connection",
+      "close",
+      "Access-Control-Allow-Origin",
+      "*",
+      "Content-Encoding",
+      "gzip",
+      "Vary",
+      "Accept-Encoding",
+      "X-Dl-Request-Id",
+      "8849752a-84c2-4043-4868-0e85da5618ab",
+      "X-Dl-Units",
+      "1.0",
+      "X-Dl-Units-Left",
+      "29988",
+      "X-Dl-Units-Reset",
+      "2018-06-19 00:00:00 +0000",
+      "X-Ratelimit-Limit",
+      "1501",
+      "X-Ratelimit-Remaining",
+      "1500",
+      "X-Ratelimit-Reset",
+      "1",
+      "X-Uniapi-Cost",
+      "units=1.000"
+    ]
+  }
+]
