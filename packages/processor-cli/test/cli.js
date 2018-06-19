@@ -1,4 +1,5 @@
 import test from "ava";
+import mockFs from "mock-fs";
 
 import cli from "../src/cli";
 
@@ -18,3 +19,18 @@ test("`start` accepts the stream and a processor", (t) => {
       t.is(cfg.processor, "p1");
     });
 });
+
+[".processorrc", ".processor.json"].forEach((file) =>
+  test(`start recognizes ${file} as a config file`, (t) => {
+    mockFs({
+      [file]: JSON.stringify({stream: "s1", processor: "p1"}),
+    });
+    cli()
+      .exitProcess(false)
+      .parse("start", (err, cfg) => {
+        t.is(cfg.stream, "s1");
+        t.is(cfg.processor, "p1");
+      });
+    mockFs.restore();
+  }),
+);
