@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://tracking.exposed">
-    <img alt="Tracking Exposed" src="https://cdn.rawgit.com/critocrito/tracking-exposed/master/logo.svg">
+    <img alt="Tracking Exposed" src="https://cdn.rawgit.com/tracking-exposed/tracking-exposed/master/logo.svg">
   </a>
 </p>
 
