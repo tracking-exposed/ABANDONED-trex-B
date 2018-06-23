@@ -1,32 +1,33 @@
 {
+  "private": true,
   "name": "tracking-exposed",
-  "version": "0.1.0",
   "description": "Enable academic research and analysis on the impact of algorithms.",
   "author": "Christo <christo@cryptodrunks.net>",
-  "private": true,
-  "workspaces": ["packages/*"],
+  "version": "0.1.0",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "commitmsg": "! git rev-parse --abbrev-ref HEAD | grep -q master || commitlint -E GIT_PARAMS",
-    "precommit": "! git rev-parse --abbrev-ref HEAD | grep -q master || lint-staged",
-    "prepublishOnly": "npm run build",
     "bootstrap": "lerna bootstrap",
+    "prebuild": "yarn clean",
+    "build": "yarn compile && yarn flow:defs && yarn flow:sources && yarn lint && yarn flow && yarn test",
+    "clean": "rimraf packages/*/dist",
+    "clean:modules": "lerna clean --yes && yarn install",
+    "precommit": "! git rev-parse --abbrev-ref HEAD | grep -q master || lint-staged",
+    "commitmsg": "! git rev-parse --abbrev-ref HEAD | grep -q master || commitlint -E GIT_PARAMS",
     "compile": "babel --config-file ./.babelrc -d ../dist --relative -s -D packages/*/src",
     "compile:watch": "yarn compile -w",
-    "clean:modules": "lerna clean --yes && yarn install",
-    "clean": "rimraf packages/*/dist",
-    "lint": "eslint packages/*/test packages/*/src *.config.js test-setup.js",
+    "coverage": "cross-env NODE_ENV=test nyc ava",
     "fix": "yarn lint --fix",
     "flow": "flow",
+    "flow-coverage": "flow-coverage-report --config ./.flowcoverage",
     "flow:defs": "flow-mono install-types update",
     "flow:sources": "for i in packages/*; do flow-copy-source -i README.MD -v $i/src $i/dist; done",
+    "lint": "eslint packages/*/test packages/*/src *.config.js test-setup.js",
+    "prepublishOnly": "npm run build",
+    "release": "lerna publish --yes",
     "test": "cross-env NODE_ENV=test ava",
-    "test:watch": "cross-env NODE_ENV=test ava -w",
-    "prebuild": "yarn clean",
-    "build":
-      "yarn compile && yarn flow:defs && yarn flow:sources && yarn lint && yarn flow && yarn test",
-    "coverage": "cross-env NODE_ENV=test nyc ava",
-    "flow-coverage": "flow-coverage-report --config ./.flowcoverage",
-    "release": "lerna publish --yes"
+    "test:watch": "cross-env NODE_ENV=test ava -w"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.51",
@@ -61,16 +62,23 @@
     "lint-staged": "^7.2.0",
     "nyc": "^12.0.2",
     "prettier": "^1.13.5",
+    "prettier-package-json": "^1.6.0",
     "rimraf": "^2.6.2"
   },
   "ava": {
-    "require": ["./test-setup.js"],
+    "require": [
+      "./test-setup.js"
+    ],
     "babel": {
       "testOptions": {
         "babelrc": false
       }
     },
-    "sources": ["packages/*/src/**/*.js"],
-    "files": ["packages/*/test/**/*.js"]
+    "sources": [
+      "packages/*/src/**/*.js"
+    ],
+    "files": [
+      "packages/*/test/**/*.js"
+    ]
   }
 }

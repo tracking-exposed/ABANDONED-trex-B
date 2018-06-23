@@ -1,8 +1,6 @@
 {
-  "packages/*/src/**/*.js": ["eslint --fix", "git add"],
-  "{commitlint,ava}.config.js": ["eslint --fix", "git add"],
-  "*.json": ["prettier --parser json --write --print-width 100", "git add"],
-  ".babelrc": ["prettier --parser json --write", "git add"],
-  ".lintstagedrc": ["prettier --parser json --write", "git add"],
-  ".nycrc": ["prettier --parser json --write", "git add"]
+  "*.js": ["eslint --fix", "git add"],
+  "package.json": ["prettier-package-json --write", "git add"],
+  "*.json": ["prettier --write", "git add"],
+  ".*rc": ["prettier --parser json --write", "git add"]
 }
