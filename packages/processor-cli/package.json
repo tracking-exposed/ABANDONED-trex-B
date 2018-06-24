@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "main": "dist/index.js",
   "bin": {
-    "processorctl": "./bin/processorctl"
+    "processorctl": "./bin/processorctl.js"
   },
   "license": "GPL-3.0",
   "keywords": [],
