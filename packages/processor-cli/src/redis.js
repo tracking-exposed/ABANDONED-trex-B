@@ -30,16 +30,26 @@ export const publishToStream = (
 export const pollFromStream = async (stream: string, redis: Redis) => {
   // $FlowFixMe
   const data = await redis.xread("BLOCK", "0", "STREAMS", stream, "$");
-  return data.reduce((memo, [, [id, values]]) => {
-    const obj = values
-      .reduce((acc, arg, i) => {
-        const chunk = Math.floor(i / 2);
-        const tuple = acc[chunk] || [];
-        // eslint-disable-next-line no-param-reassign
-        acc[chunk] = tuple.concat(arg);
-        return acc;
-      }, [])
-      .reduce((acc, [key, value]) => Object.assign(acc, {[key]: value}), {});
-    return memo.concat({stream, id, ...obj});
-  }, []);
+  return data.reduce(
+    (memo, [, events]) =>
+      memo.concat(
+        events.map(([id, values]) => {
+          const obj = values
+            .reduce((acc, arg, i) => {
+              const chunk = Math.floor(i / 2);
+              const tuple = acc[chunk] || [];
+              // eslint-disable-next-line no-param-reassign
+              acc[chunk] = tuple.concat(arg);
+              return acc;
+            }, [])
+            .reduce(
+              (acc, [key, value]) => Object.assign(acc, {[key]: value}),
+              {},
+            );
+          return {stream, id, ...obj};
+          // return acc.concat();
+        }),
+      ),
+    [],
+  );
 };
