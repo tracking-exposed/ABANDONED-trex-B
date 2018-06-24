@@ -1,21 +1,7 @@
 // @flow
-export const runForever = (fn: () => Promise<mixed>): Promise<mixed> => {
-  const iter = () =>
-    new Promise(async (resolve, reject) => {
-      try {
-        await fn();
-      } catch (err) {
-        return reject(err);
-      }
-      return setTimeout(() => resolve(iter()), 0);
-    });
-
-  return Promise.resolve(iter());
-};
-
 export const runForeverUntil = async (
-  fn: () => Promise<mixed>,
   pred: (n: mixed) => Promise<boolean> = () => Promise.resolve(false),
+  fn: () => Promise<mixed>,
 ): Promise<mixed> => {
   const iter = () =>
     new Promise(async (resolve, reject) => {
@@ -37,3 +23,6 @@ export const runForeverUntil = async (
 
   return Promise.resolve(iter());
 };
+
+export const runForever = (fn: () => Promise<mixed>): Promise<mixed> =>
+  runForeverUntil(() => Promise.resolve(true), fn);

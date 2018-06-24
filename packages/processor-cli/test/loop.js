@@ -32,7 +32,7 @@ test("loop a promise returning function until a predicate holds", async (t) => {
     .onSecondCall()
     .resolves(false);
 
-  await runForeverUntil(fn, pred);
+  await runForeverUntil(pred, fn);
 
   t.is(pred.callCount, 2);
   t.is(fn.callCount, 2);
@@ -48,7 +48,7 @@ test("loop a promise returning function until a predicate holds catches errors",
     .rejects(ERR);
 
   try {
-    await runForeverUntil(fn, pred);
+    await runForeverUntil(pred, fn);
   } catch (err) {
     t.is(pred.callCount, 1);
     t.is(fn.callCount, 2);
@@ -64,7 +64,7 @@ test("loop a promise returning function until a predicate holds catches errors i
   const fn = sinon.stub().resolves(true);
 
   try {
-    await runForeverUntil(fn, pred);
+    await runForeverUntil(pred, fn);
   } catch (err) {
     t.is(pred.callCount, 1);
     t.is(fn.callCount, 1);
