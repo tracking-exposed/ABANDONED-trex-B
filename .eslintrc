@@ -8,10 +8,11 @@
     "airbnb-base",
     "plugin:import/errors",
     "plugin:import/warnings",
+    "plugin:promise/recommended",
     "prettier",
     "plugin:flowtype/recommended"
   ],
-  "plugins": ["import", "prettier", "flowtype", "flowtype-errors"],
+  "plugins": ["import", "promise", "prettier", "flowtype", "flowtype-errors"],
   "settings": {
     "flowtype": {
       "onlyFilesWithFlowAnnotation": true

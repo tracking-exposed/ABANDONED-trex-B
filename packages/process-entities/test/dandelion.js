@@ -13,7 +13,8 @@ const token = "token";
 const text =
   "When you setup an interceptor for a URL and that interceptor is used, it is removed from the interceptor list.";
 
-nockBack("dandelion-entities.json").then(({nockDone}) => {
+// eslint-disable-next-line promise/catch-or-return
+nockBack("dandelion-entities.json").then(({nockDone}) =>
   test("fetch entities", async (t) => {
     nock("https://api.dandelion.eu")
       .get("/datatxt/nex/v1")
@@ -25,5 +26,5 @@ nockBack("dandelion-entities.json").then(({nockDone}) => {
     const results = await entities(text, "token");
     t.is(2, results.length);
     return nockDone();
-  });
-});
+  }),
+);
