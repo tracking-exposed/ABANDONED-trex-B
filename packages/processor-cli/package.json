@@ -16,7 +16,7 @@
   "devDependencies": {
     "ava": "1.0.0-beta.6",
     "flow-bin": "^0.74.0",
-    "ioredis-mock": "^3.9.1",
+    "ioredis-mock": "^3.10.0",
     "mock-fs": "^4.5.0",
     "mock-require": "^3.0.2"
   },
