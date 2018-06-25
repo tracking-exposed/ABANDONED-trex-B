@@ -30,6 +30,7 @@ export const publishToStream = (
 export const pollFromStream = async (stream: string, redis: Redis) => {
   // $FlowFixMe
   const data = await redis.xread("BLOCK", "0", "STREAMS", stream, "$");
+
   return data.reduce(
     (memo, [, events]) =>
       memo.concat(
@@ -47,7 +48,6 @@ export const pollFromStream = async (stream: string, redis: Redis) => {
               {},
             );
           return {stream, id, ...obj};
-          // return acc.concat();
         }),
       ),
     [],
