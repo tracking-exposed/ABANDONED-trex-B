@@ -1,6 +1,12 @@
 // @flow
 import Redis from "ioredis";
 
+export type StreamEvent = {
+  stream: string,
+  id: string,
+  [string]: string,
+};
+
 export const client = (host: string, port: number): Redis => {
   // $FlowFixMe
   const {string: xadd} = Redis.prototype.createBuiltinCommand("xadd");
@@ -16,7 +22,7 @@ export const client = (host: string, port: number): Redis => {
 
 export const publishToStream = (
   stream: string,
-  data: {[string]: mixed},
+  data: {[string]: string},
   redis: Redis,
 ) => {
   const args = Object.keys(data).reduce(
@@ -27,9 +33,13 @@ export const publishToStream = (
   return redis.xadd(stream, "*", ...args);
 };
 
-export const pollFromStream = async (stream: string, redis: Redis) => {
+export const pollFromStream = async (
+  stream: string,
+  lastId: string,
+  redis: Redis,
+): Promise<StreamEvent[]> => {
   // $FlowFixMe
-  const data = await redis.xread("BLOCK", "0", "STREAMS", stream, "$");
+  const data = await redis.xread("BLOCK", "0", "STREAMS", stream, lastId);
 
   return data.reduce(
     (memo, [, events]) =>
@@ -52,4 +62,10 @@ export const pollFromStream = async (stream: string, redis: Redis) => {
       ),
     [],
   );
+};
+
+export default {
+  client,
+  publishToStream,
+  pollFromStream,
 };

@@ -42,8 +42,13 @@ export default async (opts: {[string]: mixed} = {}) => {
   // eslint-disable-next-line no-console
   console.log("Starting to poll events.");
 
+  let id = "$";
+
   runForever(async () => {
-    const events = await pollFromStream(cfg.stream, redis);
-    await Promise.all(events.map(processor));
+    const events = await pollFromStream(cfg.stream, id, redis);
+    const lastEvent = events.slice(-1)[0];
+    // eslint-disable-next-line prefer-destructuring
+    id = lastEvent.id;
+    await Promise.all(events.map((event) => processor(event, cfg)));
   });
 };
