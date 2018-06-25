@@ -7,6 +7,20 @@ export type StreamEvent = {
   [string]: string,
 };
 
+export const fromEvent = (event: string[]): {[string]: string} =>
+  event
+    .reduce((acc, arg, i) => {
+      const chunk = Math.floor(i / 2);
+      const tuple = acc[chunk] || [];
+      // eslint-disable-next-line no-param-reassign
+      acc[chunk] = tuple.concat(arg);
+      return acc;
+    }, [])
+    .reduce((acc, [key, value]) => Object.assign(acc, {[key]: value}), {});
+
+export const toEvent = (obj: {[string]: mixed}): Array<mixed> =>
+  Object.keys(obj).reduce((memo, key) => memo.concat([key, obj[key]]), []);
+
 export const client = (host: string, port: number): Redis => {
   // $FlowFixMe
   const {string: xadd} = Redis.prototype.createBuiltinCommand("xadd");
@@ -21,10 +35,7 @@ export const client = (host: string, port: number): Redis => {
 };
 
 export const publishToStream = (stream: string, data: {}, redis: Redis) => {
-  const args = Object.keys(data).reduce(
-    (memo, key) => memo.concat([key, data[key]]),
-    [],
-  );
+  const args = toEvent(data);
   // $FlowFixMe
   return redis.xadd(stream, "*", ...args);
 };
@@ -40,20 +51,9 @@ export const pollFromStream = async (
   return data.reduce(
     (memo, [, events]) =>
       memo.concat(
-        events.map(([id, values]) => {
-          const obj = values
-            .reduce((acc, arg, i) => {
-              const chunk = Math.floor(i / 2);
-              const tuple = acc[chunk] || [];
-              // eslint-disable-next-line no-param-reassign
-              acc[chunk] = tuple.concat(arg);
-              return acc;
-            }, [])
-            .reduce(
-              (acc, [key, value]) => Object.assign(acc, {[key]: value}),
-              {},
-            );
-          return {stream, id, ...obj};
+        events.map(([id, eventData]) => {
+          const eventObj = fromEvent(eventData);
+          return {stream, id, ...eventObj};
         }),
       ),
     [],
