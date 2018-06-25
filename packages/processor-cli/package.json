@@ -24,6 +24,7 @@
     "sinon": "^6.0.0"
   },
   "dependencies": {
+    "dotenv": "^6.0.0",
     "find-up": "^3.0.0",
     "ioredis": "^3.2.2",
     "yargs": "^11.0.0"

@@ -1,7 +1,7 @@
 // @flow
 import Redis from "ioredis";
 
-export const client = (): Redis => {
+export const client = (host: string, port: number): Redis => {
   // $FlowFixMe
   const {string: xadd} = Redis.prototype.createBuiltinCommand("xadd");
   // $FlowFixMe
@@ -10,7 +10,7 @@ export const client = (): Redis => {
   Redis.prototype.xadd = xadd;
   // $FlowFixMe
   Redis.prototype.xread = xread;
-  const redis = new Redis();
+  const redis = new Redis({host, port});
   return redis;
 };
 
