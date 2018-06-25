@@ -25,14 +25,7 @@ const processor = async (
   const annotations = await extractEntities(event.message, dandelionToken);
   const ids = await Promise.all(
     annotations.map((annotation) =>
-      publishToStream(
-        cfg.streamTo,
-        Object.keys(annotation).reduce(
-          (memo, key) => Object.assign(memo, {[key]: `${annotation[key]}`}),
-          {},
-        ),
-        redisClient,
-      ),
+      publishToStream(cfg.streamTo, annotation, redisClient),
     ),
   );
   console.log(ids);

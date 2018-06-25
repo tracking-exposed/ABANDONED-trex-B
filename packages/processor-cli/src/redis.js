@@ -20,11 +20,7 @@ export const client = (host: string, port: number): Redis => {
   return redis;
 };
 
-export const publishToStream = (
-  stream: string,
-  data: {[string]: string},
-  redis: Redis,
-) => {
+export const publishToStream = (stream: string, data: {}, redis: Redis) => {
   const args = Object.keys(data).reduce(
     (memo, key) => memo.concat([key, data[key]]),
     [],
