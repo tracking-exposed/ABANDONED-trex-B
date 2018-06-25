@@ -18,6 +18,11 @@ export default () => {
           desc: "The stream to poll.",
         })
         .alias("stream", "s")
+        .option("stream-to", {
+          type: "string",
+          desc: "The stream to push to.",
+        })
+        .alias("stream-to", "S")
         .option("processor", {
           required: true,
           type: "string",

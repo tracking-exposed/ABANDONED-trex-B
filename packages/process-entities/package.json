@@ -6,16 +6,20 @@
   "license": "GPL-3.0",
   "keywords": [],
   "repository": "https://github.com/tracking-exposed/tracking-exposed",
-  "homepage":
-    "https://github.com/tracking-exposed/tracking-exposed/tree/master/packages/process-entities#readme",
+  "homepage": "https://github.com/tracking-exposed/tracking-exposed/tree/master/packages/process-entities#readme",
   "author": "Christo <christo@cryptodrunks.net>",
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "devDependencies": {
     "ava": "1.0.0-beta.6",
     "flow-bin": "^0.74.0",
     "nock": "^9.3.3"
   },
   "dependencies": {
+    "@tracking-exposed/processor-cli": "0.1.0",
+    "dotenv": "^6.0.0",
     "isomorphic-fetch": "^2.2.1"
   }
 }

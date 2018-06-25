@@ -1,7 +1,7 @@
 import path from "path";
 import test from "ava";
 import nock from "nock";
-import {entities} from "../src/dandelion";
+import {extractEntities} from "../src/dandelion";
 
 nock.disableNetConnect();
 const nockBack = nock.back;
@@ -23,7 +23,7 @@ nockBack("dandelion-entities.json").then(({nockDone}) =>
         token,
         text,
       });
-    const results = await entities(text, "token");
+    const results = await extractEntities(text, token);
     t.is(2, results.length);
     return nockDone();
   }),
