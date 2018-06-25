@@ -1,8 +1,10 @@
 // @flow
-export const runForeverUntil = async (
-  pred: (n: mixed) => Promise<boolean> = () => Promise.resolve(false),
-  fn: () => Promise<mixed>,
-): Promise<mixed> => {
+type SyncAsync<R> = Promise<R> | R;
+
+export const runForeverUntil = async <T>(
+  pred: (n: T) => SyncAsync<boolean> = () => Promise.resolve(false),
+  fn: () => SyncAsync<T>,
+): Promise<void> => {
   const iter = () =>
     new Promise(async (resolve, reject) => {
       let value;
@@ -24,5 +26,5 @@ export const runForeverUntil = async (
   return Promise.resolve(iter());
 };
 
-export const runForever = (fn: () => Promise<mixed>): Promise<mixed> =>
+export const runForever = <T>(fn: () => SyncAsync<T>): Promise<void> =>
   runForeverUntil(() => Promise.resolve(true), fn);
