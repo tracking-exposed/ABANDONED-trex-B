@@ -1,3 +1,7 @@
+[ignore]
+.*/dist/.*
+.*\.json
+
 [options]
 include_warnings=true
 esproposal.decorators=ignore
