@@ -45,7 +45,7 @@ export default async (opts: {[string]: mixed} = {}) => {
   let id = "$";
 
   runForever(async () => {
-    const events = await pollFromStream(cfg.stream, id, redis);
+    const events = await pollFromStream(redis, cfg.stream, id);
     const lastEvent = events.slice(-1)[0];
     // eslint-disable-next-line prefer-destructuring
     id = lastEvent.id;

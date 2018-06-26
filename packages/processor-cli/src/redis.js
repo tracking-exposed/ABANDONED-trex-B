@@ -35,16 +35,16 @@ export const client = (host: string, port: number): Redis => {
   return redis;
 };
 
-export const publishToStream = (stream: string, data: {}, redis: Redis) => {
+export const publishToStream = (redis: Redis, stream: string, data: {}) => {
   const args = toEvent(data);
   // $FlowFixMe
   return redis.xadd(stream, "*", ...args);
 };
 
 export const pollFromStream = async (
+  redis: Redis,
   stream: string,
   lastId: string,
-  redis: Redis,
 ): Promise<StreamEvent[]> => {
   // $FlowFixMe
   const data = await redis.xread("BLOCK", "0", "STREAMS", stream, lastId);

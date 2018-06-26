@@ -35,7 +35,7 @@ const processor = async (
     const annotations = await extractEntities(impression.text, dandelionToken);
     await Promise.all(
       annotations.map((annotation) =>
-        redis.publishToStream(cfg.streamTo, annotation, redisClient),
+        redis.publishToStream(redisClient, cfg.streamTo, annotation),
       ),
     );
   }

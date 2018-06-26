@@ -5,7 +5,7 @@ import {pollFromStream, publishToStream} from "../src/redis";
 
 test("poll for next event in a blocking manner", async (t) => {
   const redis = new MockRedis();
-  const op = pollFromStream("mystream", "$", redis);
+  const op = pollFromStream(redis, "mystream", "$");
 
   const id = await redis.xadd("mystream", "*", "key", "value");
   const events = await op;
@@ -15,7 +15,7 @@ test("poll for next event in a blocking manner", async (t) => {
 
 test("poll for event since id in a blocking manner", async (t) => {
   const redis = new MockRedis();
-  const op = pollFromStream("mystream", "3-0", redis);
+  const op = pollFromStream(redis, "mystream", "3-0");
 
   await redis.xadd("mystream", "*", "key", "value");
   await redis.xadd("mystream", "*", "key", "value");
@@ -28,7 +28,7 @@ test("poll for event since id in a blocking manner", async (t) => {
 test("push an event to a stream", async (t) => {
   const redis = new MockRedis();
 
-  const id = await publishToStream("mystream", {key: "value"}, redis);
+  const id = await publishToStream(redis, "mystream", {key: "value"});
 
   t.deepEqual(redis.data.get("mystream"), [[id, ["key", "value"]]]);
 });
