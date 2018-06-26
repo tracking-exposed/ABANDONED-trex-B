@@ -2,7 +2,7 @@
 import dotenv from "dotenv";
 import cli from "./cli";
 import loader from "./loader";
-import {client, pollFromStream} from "./redis";
+import {client as redisClient, pollFromStream} from "./redis";
 import {runForever} from "./loop";
 
 dotenv.config();
@@ -34,7 +34,7 @@ const registerShutdown = (fn: () => mixed): void => {
 
 export default async (opts: {[string]: mixed} = {}) => {
   const cfg = Object.assign(cli().parse(), opts);
-  const redis = client(redisHost, redisPort);
+  const redis = redisClient(redisHost, redisPort);
   const processor = await loader(cfg.processor);
 
   // eslint-disable-next-line no-console

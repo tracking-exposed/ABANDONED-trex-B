@@ -4,6 +4,7 @@ import Redis from "ioredis";
 export type StreamEvent = {
   stream: string,
   id: string,
+  impressionId: string,
   [string]: string,
 };
 

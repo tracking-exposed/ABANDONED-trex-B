@@ -21,12 +21,14 @@
     "ioredis-mock": "^3.10.0",
     "mock-fs": "^4.5.0",
     "mock-require": "^3.0.2",
+    "mongodb-memory-server": "^1.8.0",
     "sinon": "^6.0.0"
   },
   "dependencies": {
     "dotenv": "^6.0.0",
     "find-up": "^3.0.0",
     "ioredis": "^3.2.2",
+    "mongodb": "^3.0.10",
     "yargs": "^11.0.0"
   }
 }

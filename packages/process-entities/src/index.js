@@ -1,11 +1,9 @@
 // @flow
 import dotenv from "dotenv";
-import {redis} from "@tracking-exposed/processor-cli";
+import {redis, mongo} from "@tracking-exposed/processor-cli";
 import type {StreamEvent} from "@tracking-exposed/processor-cli/src/redis";
 
 import {extractEntities} from "./dandelion";
-
-const {client, publishToStream} = redis;
 
 dotenv.config();
 
@@ -15,20 +13,32 @@ const envOr = (orVal: string, key: string) =>
 const dandelionToken = envOr("invalid", "TREX_DANDELION_API_TOKEN");
 const redisHost = envOr("localhost", "TREX_REDIS_HOST");
 const redisPort = parseInt(envOr("6379", "TREX_REDIS_PORT"), 10);
+const mongoHost = envOr("localhost", "TREX_MONGO_HOST");
+const mongoPort = envOr("27017", "TREX_MONGO_PORT");
+const mongoDb = envOr("tracking-exposed", "TREX_MONGO_DB");
 
-const redisClient = client(redisHost, redisPort);
+const mongoUri = `mongodb://${mongoHost}:${mongoPort}/${mongoDb}`;
 
 const processor = async (
   event: StreamEvent,
   cfg: {streamTo: string},
 ): Promise<void> => {
-  const annotations = await extractEntities(event.message, dandelionToken);
-  const ids = await Promise.all(
-    annotations.map((annotation) =>
-      publishToStream(cfg.streamTo, annotation, redisClient),
-    ),
+  const redisClient = redis.client(redisHost, redisPort);
+  const mongoClient = await mongo.client(mongoUri);
+
+  const impression = await mongo.fetchImpression(
+    mongoClient,
+    event.impressionId,
   );
-  console.log(ids);
+
+  if (impression && impression.text) {
+    const annotations = await extractEntities(impression.text, dandelionToken);
+    await Promise.all(
+      annotations.map((annotation) =>
+        redis.publishToStream(cfg.streamTo, annotation, redisClient),
+      ),
+    );
+  }
 };
 
 export default processor;
