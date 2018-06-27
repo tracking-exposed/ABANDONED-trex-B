@@ -8,6 +8,7 @@ Utility functions for Tracking Exposed.
 
 - [Usage](#usage)
 - [API](#api)
+  - [`ageingMemoize`](#ageingmemoize)
   - [`envOr`](#envor)
   - [`env`](#env)
 - [FAQ](#faq)
@@ -25,6 +26,8 @@ yarn add @tracking-exposed/utils
 ```
 
 ## API
+
+### `ageingMemoize`
 
 ### `envOr`
 

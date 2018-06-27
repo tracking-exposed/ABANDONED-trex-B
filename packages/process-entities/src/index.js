@@ -1,6 +1,6 @@
 // @flow
 import {redis, mongo} from "@tracking-exposed/processor-cli";
-import {envOr, env} from "@tracking-exposed/utils";
+import {ageingMemoize, envOr, env} from "@tracking-exposed/utils";
 import dotenv from "dotenv";
 import type {StreamEvent} from "@tracking-exposed/processor-cli/src/redis";
 
@@ -17,15 +17,15 @@ const mongoDb = envOr("tracking-exposed", "TREX_MONGO_DB");
 
 const mongoUri = `mongodb://${mongoHost}:${mongoPort}/${mongoDb}`;
 
+const redisClient = () => redis.client(redisHost, redisPort);
+const mongoClient = ageingMemoize(() => mongo.client(mongoUri), 10000);
+
 const processor = async (
   event: StreamEvent,
   cfg: {streamTo: string},
 ): Promise<void> => {
-  const redisClient = redis.client(redisHost, redisPort);
-  const mongoClient = await mongo.client(mongoUri);
-
   const impression = await mongo.fetchImpression(
-    mongoClient,
+    await mongoClient(),
     event.impressionId,
   );
 
@@ -33,7 +33,7 @@ const processor = async (
     const annotations = await extractEntities(impression.text, dandelionToken);
     await Promise.all(
       annotations.map((annotation) =>
-        redis.publishToStream(redisClient, cfg.streamTo, annotation),
+        redis.publishToStream(redisClient(), cfg.streamTo, annotation),
       ),
     );
   }

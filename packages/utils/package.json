@@ -21,5 +21,8 @@
     "ava": "1.0.0-beta.6",
     "flow-bin": "^0.74.0",
     "sinon": "^6.0.1"
+  },
+  "dependencies": {
+    "date-fns": "^1.29.0"
   }
 }
