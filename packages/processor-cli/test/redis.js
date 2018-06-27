@@ -1,7 +1,33 @@
 import test from "ava";
 import MockRedis from "ioredis-mock";
 
-import {pollFromStream, publishToStream} from "../src/redis";
+import {
+  fromEvent,
+  toEvent,
+  client,
+  pollFromStream,
+  publishToStream,
+} from "../src/redis";
+
+test("redis converts event data to an object", (t) => {
+  const data = ["key", "value", "key1", "value1"];
+  const expected = {key: "value", key1: "value1"};
+  const result = fromEvent(data);
+  t.deepEqual(result, expected);
+});
+
+test("redis converts an object to event data", (t) => {
+  const data = {key: "value", key1: "value1"};
+  const expected = ["key", "value", "key1", "value1"];
+  const result = toEvent(data);
+  t.deepEqual(result, expected);
+});
+
+test("redis client implements the stream API", (t) => {
+  const redisClient = client("host", 1);
+  t.true(typeof redisClient.xadd === "function");
+  t.true(typeof redisClient.xread === "function");
+});
 
 test("poll for next event in a blocking manner", async (t) => {
   const redis = new MockRedis();
