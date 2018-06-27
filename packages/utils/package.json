@@ -1,0 +1,25 @@
+{
+  "name": "@tracking-exposed/utils",
+  "description": "Utility functions for tracking-exposed.",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "license": "GPL-3.0",
+  "keywords": [
+    "tracking-exposed",
+    "algorithmic bias",
+    "utilities",
+    "utils"
+  ],
+  "repository": "https://github.com/tracking-exposed/tracking-exposed",
+  "homepage": "https://github.com/tracking-exposed/tracking-exposed/tree/master/packages/utils#readme",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "devDependencies": {
+    "ava": "1.0.0-beta.6",
+    "flow-bin": "^0.74.0",
+    "sinon": "^6.0.1"
+  }
+}

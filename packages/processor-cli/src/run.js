@@ -1,4 +1,5 @@
 // @flow
+import {envOr} from "@tracking-exposed/utils";
 import dotenv from "dotenv";
 import cli from "./cli";
 import loader from "./loader";
@@ -6,9 +7,6 @@ import {client as redisClient, pollFromStream} from "./redis";
 import {runForever} from "./loop";
 
 dotenv.config();
-
-const envOr = (orVal: string, key: string) =>
-  process.env[key] == null ? orVal : process.env[key];
 
 const redisHost = envOr("localhost", "TREX_REDIS_HOST");
 const redisPort = parseInt(envOr("6379", "TREX_REDIS_PORT"), 10);

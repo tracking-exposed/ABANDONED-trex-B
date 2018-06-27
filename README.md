@@ -28,6 +28,7 @@ Tracking Exposed enables academic research and analysis on the impact of algorit
 |---------|---------|-------------|
 | [`@tracking-exposed/service-cli`](/packages/service-cli) | [![npm](https://img.shields.io/npm/v/@tracking-exposed/service-cli.svg?maxAge=2592000)](https://www.npmjs.com/package/@tracking-exposed/service-cli) | Control a web service. |
 | [`@tracking-exposed/processor-cli`](/packages/processor-cli) | [![npm](https://img.shields.io/npm/v/@tracking-exposed/processor-cli.svg?maxAge=2592000)](https://www.npmjs.com/package/@tracking-exposed/processor-cli) | Control a data processor. |
+| [`@tracking-exposed/utils`](/packages/utils) | [![npm](https://img.shields.io/npm/v/@tracking-exposed/utils.svg?maxAge=2592000)](https://www.npmjs.com/package/@tracking-exposed/utils) | Utility functions for Tracking Exposed. |
 
 ### Web Services
 

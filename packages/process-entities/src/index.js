@@ -1,16 +1,14 @@
 // @flow
-import dotenv from "dotenv";
 import {redis, mongo} from "@tracking-exposed/processor-cli";
+import {envOr, env} from "@tracking-exposed/utils";
+import dotenv from "dotenv";
 import type {StreamEvent} from "@tracking-exposed/processor-cli/src/redis";
 
 import {extractEntities} from "./dandelion";
 
 dotenv.config();
 
-const envOr = (orVal: string, key: string) =>
-  process.env[key] == null ? orVal : process.env[key];
-
-const dandelionToken = envOr("invalid", "TREX_DANDELION_API_TOKEN");
+const dandelionToken = env("TREX_DANDELION_API_TOKEN");
 const redisHost = envOr("localhost", "TREX_REDIS_HOST");
 const redisPort = parseInt(envOr("6379", "TREX_REDIS_PORT"), 10);
 const mongoHost = envOr("localhost", "TREX_MONGO_HOST");
