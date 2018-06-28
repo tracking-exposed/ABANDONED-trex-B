@@ -3,7 +3,13 @@ import Chance from "chance";
 import {MongoClient, MongoError} from "mongodb";
 import MongodbMemoryServer from "mongodb-memory-server";
 
-import {client, findOneBy, upsertOne} from "../src/mongo";
+import {
+  client,
+  findOneBy,
+  upsertOne,
+  addToSet,
+  findByMember,
+} from "../src/mongo";
 
 const chance = new Chance();
 
@@ -141,3 +147,122 @@ test.serial("mongo upsertOne updates an existing record", async (t) => {
 
   return mongo.db().dropCollection(collection);
 });
+
+test.serial(
+  "mongo addToSet adds a single element to a set of a record",
+  async (t) => {
+    const mongoUri = await t.context.mongod.getConnectionString();
+    const mongo = await MongoClient.connect(mongoUri);
+    const collection = chance.hash();
+    const initial = {id: chance.guid(), field: ["one", "two"]};
+
+    await mongo
+      .db()
+      .collection(collection)
+      .insert(Object.assign({}, initial));
+
+    await addToSet(mongo, collection, {id: initial.id}, "field", "three");
+
+    const expected = Object.assign({}, initial, {
+      field: ["one", "two", "three"],
+    });
+
+    const result = await mongo
+      .db()
+      .collection(collection)
+      .findOne({id: initial.id}, {projection: {_id: 0}});
+
+    t.deepEqual(result, expected);
+
+    return mongo.db().dropCollection(collection);
+  },
+);
+
+test.serial(
+  "mongo addToSet adds multiple elements to a set of a record",
+  async (t) => {
+    const mongoUri = await t.context.mongod.getConnectionString();
+    const mongo = await MongoClient.connect(mongoUri);
+    const collection = chance.hash();
+    const initial = {id: chance.guid(), field: ["one", "two"]};
+
+    await mongo
+      .db()
+      .collection(collection)
+      .insert(Object.assign({}, initial));
+
+    await addToSet(mongo, collection, {id: initial.id}, "field", [
+      "two",
+      "three",
+      "four",
+    ]);
+
+    const expected = Object.assign({}, initial, {
+      field: ["one", "two", "three", "four"],
+    });
+
+    const result = await mongo
+      .db()
+      .collection(collection)
+      .findOne({id: initial.id}, {projection: {_id: 0}});
+
+    t.deepEqual(result, expected);
+
+    return mongo.db().dropCollection(collection);
+  },
+);
+
+test.serial(
+  "mongo findByMember returns all records that includes a single element in an array field",
+  async (t) => {
+    const mongoUri = await t.context.mongod.getConnectionString();
+    const mongo = await MongoClient.connect(mongoUri);
+    const collection = chance.hash();
+    const records = [
+      {id: chance.guid(), field: ["one"]},
+      {id: chance.guid(), field: ["one", "two"]},
+      {id: chance.guid(), field: ["two", "three"]},
+      {id: chance.guid(), field: ["three", "four"]},
+    ];
+    await mongo
+      .db()
+      .collection(collection)
+      .insert(records);
+
+    const expected = records.slice(1, 3);
+    const result = await findByMember(mongo, collection, "field", "two");
+
+    t.deepEqual(result, expected);
+
+    return mongo.db().dropCollection(collection);
+  },
+);
+
+test.serial(
+  "mongo findByMember returns all records that includes multiple elements in an array field",
+  async (t) => {
+    const mongoUri = await t.context.mongod.getConnectionString();
+    const mongo = await MongoClient.connect(mongoUri);
+    const collection = chance.hash();
+    const records = [
+      {id: chance.guid(), field: ["one"]},
+      {id: chance.guid(), field: ["one", "two"]},
+      {id: chance.guid(), field: ["two", "three"]},
+      {id: chance.guid(), field: ["three", "four"]},
+    ];
+    await mongo
+      .db()
+      .collection(collection)
+      .insert(records);
+
+    const expected = records.slice(2, 3);
+    const result = await findByMember(mongo, collection, "field", [
+      "two",
+      "three",
+    ]);
+
+    t.deepEqual(result, expected);
+
+    return mongo.db().dropCollection(collection);
+  },
+);

@@ -65,6 +65,7 @@ type Impression = {
   impressionOrder: number,
   impressionTime: Date,
   visibility: "public" | "private",
+  entities: string[],
   html: HtmlSnippet,
 };
 

@@ -31,8 +31,40 @@ export const upsertOne = <T>(
     .collection(collection)
     .updateOne(query, {$set: data}, {upsert: true});
 
+export const addToSet = <T>(
+  mongo: MongoClient,
+  collection: string,
+  query: {[string]: mixed},
+  field: string,
+  values: T | Array<T>,
+): Promise<void> =>
+  mongo
+    .db()
+    .collection(collection)
+    .updateOne(query, {
+      $addToSet: {[field]: {$each: Array.isArray(values) ? values : [values]}},
+    });
+
+export const findByMember = <R, T>(
+  mongo: MongoClient,
+  collection: string,
+  field: string,
+  members: R | Array<R>,
+): Promise<Array<T>> =>
+  mongo
+    .db()
+    .collection(collection)
+    .find(
+      {[field]: {$all: Array.isArray(members) ? members : [members]}},
+      {_id: 0},
+    )
+    .limit(100)
+    .toArray();
+
 export default {
   client,
   findOneBy,
   upsertOne,
+  addToSet,
+  findByMember,
 };
