@@ -3,8 +3,7 @@ import Chance from "chance";
 import {MongoClient, MongoError} from "mongodb";
 import MongodbMemoryServer from "mongodb-memory-server";
 
-import {client, fetchImpression, storeImpression} from "../src/mongo";
-import impressions from "./fixtures/impressions";
+import {client, findOneBy, upsertOne} from "../src/mongo";
 
 const chance = new Chance();
 
@@ -24,66 +23,102 @@ test.serial("mongo client throws an error if it can't connect", async (t) => {
   await t.throws(client(mongoUri), MongoError);
 });
 
-test.serial("fetch a single impression from mongo", async (t) => {
-  const mongoUri = await t.context.mongod.getConnectionString();
-  const mongo = await MongoClient.connect(mongoUri);
-  mongo
-    .db()
-    .collection("impressions")
-    .insert(impressions);
-  const impression = await fetchImpression(mongo, impressions[0].id);
-  const expected = impressions[0];
-  t.deepEqual(impression, expected);
-  return mongo.db().dropCollection("impressions");
-});
-
-test.serial("fetch a non existing impression from mongo", async (t) => {
-  const mongoUri = await t.context.mongod.getConnectionString();
-  const mongo = await MongoClient.connect(mongoUri);
-  const impression = await fetchImpression(mongo, "non-existing");
-  t.falsy(impression);
-});
-
-test.serial("mongo storeImpression creates a new impression", async (t) => {
-  const impression = {impressionId: chance.guid(), timelineId: chance.guid()};
-  const mongoUri = await t.context.mongod.getConnectionString();
-  const mongo = await MongoClient.connect(mongoUri);
-  await storeImpression(mongo, impression);
-
-  const {impressionId: expImpressionId, timelineId: expTimelineId} = await mongo
-    .db()
-    .collection("impressions")
-    .findOne({impressionId: impression.impressionId});
-
-  t.is(impression.impressionId, expImpressionId);
-  t.is(impression.timelineId, expTimelineId);
-  return mongo.db().dropCollection("impressions");
-});
-
 test.serial(
-  "mongo storeImpression updates an existing impression",
+  "mongo findOneBy queries the database for a single record",
   async (t) => {
-    const impression = {impressionId: chance.guid(), timelineId: chance.guid()};
     const mongoUri = await t.context.mongod.getConnectionString();
     const mongo = await MongoClient.connect(mongoUri);
+    const collection = chance.hash();
+    const expected = {id: chance.guid(), name: chance.name()};
     await mongo
       .db()
-      .collection("impressions")
-      .insertOne(impression);
-    impression.timelineId = chance.guid();
+      .collection(collection)
+      .insertOne(expected);
 
-    await storeImpression(mongo, impression);
+    const result = await findOneBy(mongo, collection, {
+      id: expected.id,
+    });
 
-    const {
-      impressionId: expImpressionId,
-      timelineId: expTimelineId,
-    } = await mongo
-      .db()
-      .collection("impressions")
-      .findOne({impressionId: impression.impressionId});
+    t.deepEqual(result, expected);
 
-    t.is(impression.impressionId, expImpressionId);
-    t.is(impression.timelineId, expTimelineId);
-    return mongo.db().dropCollection("impressions");
+    return mongo.db().dropCollection(collection);
   },
 );
+
+test.serial(
+  "mongo findOneBy returns null for a non existing record",
+  async (t) => {
+    const mongoUri = await t.context.mongod.getConnectionString();
+    const mongo = await MongoClient.connect(mongoUri);
+    const collection = chance.hash();
+    // Create the collection by inserting at least one document.
+    await mongo
+      .db()
+      .collection(collection)
+      .insertOne({id: chance.guid()});
+
+    const result = await findOneBy(mongo, collection, {
+      id: chance.guid(),
+    });
+
+    t.true(result == null);
+
+    return mongo.db().dropCollection(collection);
+  },
+);
+
+test.serial("mongo upsertOne creates a new record", async (t) => {
+  const mongoUri = await t.context.mongod.getConnectionString();
+  const mongo = await MongoClient.connect(mongoUri);
+  const collection = chance.hash();
+  const expected = {id: chance.guid(), name: chance.name()};
+
+  await upsertOne(
+    mongo,
+    collection,
+    {
+      id: expected.id,
+    },
+    expected,
+  );
+
+  const {_id, ...result} = await mongo
+    .db()
+    .collection(collection)
+    .findOne({id: expected.id});
+
+  t.deepEqual(result, expected);
+
+  return mongo.db().dropCollection(collection);
+});
+
+test.serial("mongo upsertOne updates an existing record", async (t) => {
+  const mongoUri = await t.context.mongod.getConnectionString();
+  const mongo = await MongoClient.connect(mongoUri);
+  const collection = chance.hash();
+  const initial = {id: chance.guid(), name: chance.name()};
+  const expected = Object.assign({}, initial, {name: chance.name()});
+
+  await mongo
+    .db()
+    .collection(collection)
+    .insert(initial);
+
+  await upsertOne(
+    mongo,
+    collection,
+    {
+      id: initial.id,
+    },
+    expected,
+  );
+
+  const {_id, ...result} = await mongo
+    .db()
+    .collection(collection)
+    .findOne({id: expected.id});
+
+  t.deepEqual(result, expected);
+
+  return mongo.db().dropCollection(collection);
+});

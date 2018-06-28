@@ -1,5 +1,5 @@
 // @flow
-import {redis, mongo} from "@tracking-exposed/data";
+import {redis, mongo, impressions} from "@tracking-exposed/data";
 import {ageingMemoize, envOr, env} from "@tracking-exposed/utils";
 import dotenv from "dotenv";
 
@@ -25,7 +25,7 @@ const processor = async (
   event: StreamEvent,
   cfg: {streamTo: string},
 ): Promise<void> => {
-  const impression = await mongo.fetchImpression(
+  const impression = await impressions.fetch(
     await mongoClient(),
     event.impressionId,
   );

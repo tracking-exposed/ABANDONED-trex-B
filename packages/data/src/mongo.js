@@ -1,11 +1,6 @@
 // @flow
 import {MongoClient} from "mongodb";
 
-type Impression = {
-  impressionId: string,
-  timelineId: string,
-};
-
 // FIXME: flow's type definition for mongodb inject any for all mongodb
 //        operations. Verify any return from any mongodb operation.
 export const client = async (
@@ -15,30 +10,29 @@ export const client = async (
   return mongo;
 };
 
-export const fetchImpression = async (
+export const findOneBy = <T>(
   mongo: MongoClient,
-  id: string,
-): Promise<Impression> =>
+  collection: string,
+  query: {[string]: mixed},
+): Promise<T> =>
   mongo
     .db()
-    .collection("impressions")
-    .findOne({id});
+    .collection(collection)
+    .findOne(query);
 
-export const storeImpression = async (
+export const upsertOne = <T>(
   mongo: MongoClient,
-  impression: Impression,
-): Promise<void> => {
+  collection: string,
+  query: {[string]: mixed},
+  data: T,
+): Promise<void> =>
   mongo
     .db()
-    .collection("impressions")
-    .updateOne(
-      {impressionId: impression.impressionId},
-      {$set: impression},
-      {upsert: true},
-    );
-};
+    .collection(collection)
+    .updateOne(query, {$set: data}, {upsert: true});
 
 export default {
   client,
-  fetchImpression,
+  findOneBy,
+  upsertOne,
 };
