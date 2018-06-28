@@ -17,6 +17,7 @@
   ],
   "devDependencies": {
     "ava": "1.0.0-beta.6",
+    "chance": "^1.0.16",
     "flow-bin": "^0.74.0",
     "ioredis-mock": "^3.10.1",
     "mock-fs": "^4.5.0",

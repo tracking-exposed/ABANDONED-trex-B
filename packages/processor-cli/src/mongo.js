@@ -25,6 +25,20 @@ export const fetchImpression = async (
     .collection("impressions")
     .findOne({id});
 
+export const storeImpression = async (
+  mongo: MongoClient,
+  impression: Impression,
+): Promise<void> => {
+  mongo
+    .db()
+    .collection("impressions")
+    .updateOne(
+      {impressionId: impression.impressionId},
+      {$set: impression},
+      {upsert: true},
+    );
+};
+
 export default {
   client,
   fetchImpression,
