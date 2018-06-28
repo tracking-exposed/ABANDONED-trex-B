@@ -18,7 +18,7 @@ export const findOneBy = <T>(
   mongo
     .db()
     .collection(collection)
-    .findOne(query);
+    .findOne(query, {projection: {_id: 0}});
 
 export const upsertOne = <T>(
   mongo: MongoClient,

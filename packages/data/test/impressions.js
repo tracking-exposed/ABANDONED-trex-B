@@ -32,7 +32,7 @@ test.serial("impressions fetch retrieves a single impression", async (t) => {
   const mongoUri = await t.context.mongod.getConnectionString();
   const mongo = await MongoClient.connect(mongoUri);
   const expected = impressions[0];
-  const {_id, ...result} = await fetch(mongo, expected.id);
+  const result = await fetch(mongo, expected.id);
   t.deepEqual(result, expected);
 });
 
@@ -41,8 +41,8 @@ test.serial(
   async (t) => {
     const mongoUri = await t.context.mongod.getConnectionString();
     const mongo = await MongoClient.connect(mongoUri);
-    const impression = await fetch(mongo, "non-existing");
-    t.true(impression == null);
+    const expected = await fetch(mongo, "non-existing");
+    t.true(expected == null);
   },
 );
 
@@ -53,31 +53,31 @@ test.serial("impressions store creates a new impression", async (t) => {
 
   await store(mongo, impression);
 
-  const {_id, ...expected} = await mongo
+  const expected = await mongo
     .db()
     .collection("impressions")
-    .findOne({id: impression.id});
+    .findOne({id: impression.id}, {projection: {_id: 0}});
 
   t.deepEqual(expected, impression);
 });
 
 test.serial("impressions store updates an existing impression", async (t) => {
-  const impression = {id: chance.guid(), timelineId: chance.guid()};
   const mongoUri = await t.context.mongod.getConnectionString();
   const mongo = await MongoClient.connect(mongoUri);
+  const impression = {id: chance.guid(), timelineId: chance.guid()};
   await mongo
     .db()
     .collection("impressions")
-    .insertOne(impression);
-  impression.timelineId = chance.guid();
+    .insertOne(Object.assign({}, impression));
 
-  await store(mongo, impression);
+  const expected = Object.assign({}, impression, {timelineId: chance.guid()});
 
-  const {_id, ...expected} = impression;
-  const {_id: _id2, ...result} = await mongo
+  await store(mongo, expected);
+
+  const result = await mongo
     .db()
     .collection("impressions")
-    .findOne({id: impression.id});
+    .findOne({id: impression.id}, {projection: {_id: 0}});
 
   t.deepEqual(result, expected);
 });

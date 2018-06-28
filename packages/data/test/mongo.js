@@ -33,7 +33,7 @@ test.serial(
     await mongo
       .db()
       .collection(collection)
-      .insertOne(expected);
+      .insertOne(Object.assign({}, expected));
 
     const result = await findOneBy(mongo, collection, {
       id: expected.id,
@@ -67,6 +67,25 @@ test.serial(
   },
 );
 
+test.serial("mongo findOneBy strips the _id field", async (t) => {
+  const mongoUri = await t.context.mongod.getConnectionString();
+  const mongo = await MongoClient.connect(mongoUri);
+  const collection = chance.hash();
+  const expected = {id: chance.guid(), name: chance.name()};
+  await mongo
+    .db()
+    .collection(collection)
+    .insertOne(Object.assign({}, expected));
+
+  const result = await findOneBy(mongo, collection, {
+    id: expected.id,
+  });
+
+  t.false("_id" in result);
+
+  return mongo.db().dropCollection(collection);
+});
+
 test.serial("mongo upsertOne creates a new record", async (t) => {
   const mongoUri = await t.context.mongod.getConnectionString();
   const mongo = await MongoClient.connect(mongoUri);
@@ -82,10 +101,10 @@ test.serial("mongo upsertOne creates a new record", async (t) => {
     expected,
   );
 
-  const {_id, ...result} = await mongo
+  const result = await mongo
     .db()
     .collection(collection)
-    .findOne({id: expected.id});
+    .findOne({id: expected.id}, {projection: {_id: 0}});
 
   t.deepEqual(result, expected);
 
@@ -102,7 +121,7 @@ test.serial("mongo upsertOne updates an existing record", async (t) => {
   await mongo
     .db()
     .collection(collection)
-    .insert(initial);
+    .insert(Object.assign({}, initial));
 
   await upsertOne(
     mongo,
@@ -113,10 +132,10 @@ test.serial("mongo upsertOne updates an existing record", async (t) => {
     expected,
   );
 
-  const {_id, ...result} = await mongo
+  const result = await mongo
     .db()
     .collection(collection)
-    .findOne({id: expected.id});
+    .findOne({id: expected.id}, {projection: {_id: 0}});
 
   t.deepEqual(result, expected);
 
