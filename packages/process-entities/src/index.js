@@ -1,8 +1,9 @@
 // @flow
-import {redis, mongo} from "@tracking-exposed/processor-cli";
+import {redis, mongo} from "@tracking-exposed/data";
 import {ageingMemoize, envOr, env} from "@tracking-exposed/utils";
 import dotenv from "dotenv";
-import type {StreamEvent} from "@tracking-exposed/processor-cli/src/redis";
+
+import type {StreamEvent} from "@tracking-exposed/data/src/redis";
 
 import {extractEntities} from "./dandelion";
 

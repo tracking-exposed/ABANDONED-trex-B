@@ -26,6 +26,7 @@
     "sinon": "^6.0.0"
   },
   "dependencies": {
+    "@tracking-exposed/data": "0.1.0",
     "@tracking-exposed/utils": "0.1.0",
     "dotenv": "^6.0.0",
     "find-up": "^3.0.0",

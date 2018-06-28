@@ -1,0 +1,29 @@
+{
+  "name": "@tracking-exposed/data",
+  "description": "A common data layer for tracking exposed.",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "license": "GPL-3.0",
+  "keywords": [
+    "tracking exposed",
+    "data",
+    "data layer"
+  ],
+  "repository": "https://github.com/tracking-exposed/tracking-exposed",
+  "homepage":
+    "https://github.com/tracking-exposed/tracking-exposed/tree/master/packages/data#readme",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "files": ["dist", "src"],
+  "devDependencies": {
+    "ava": "1.0.0-beta.6",
+    "chance": "^1.0.16",
+    "flow-bin": "^0.74.0",
+    "ioredis-mock": "^3.10.1",
+    "mongodb-memory-server": "^1.8.0",
+    "sinon": "^6.0.0"
+  },
+  "dependencies": {
+    "ioredis": "^3.2.2",
+    "mongodb": "^3.0.10"
+  }
+}

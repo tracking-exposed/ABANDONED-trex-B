@@ -1,5 +1,5 @@
 // @flow
-import type {StreamEvent} from "./redis";
+import type {StreamEvent} from "@tracking-exposed/data/src/redis";
 
 export type StreamProcessor = (
   StreamEvent,

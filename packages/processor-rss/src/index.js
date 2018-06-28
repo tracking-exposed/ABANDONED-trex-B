@@ -1,6 +1,6 @@
 // @flow
 import dotenv from "dotenv";
-import type {StreamEvent} from "@tracking-exposed/processor-cli/src/redis";
+import type {StreamEvent} from "@tracking-exposed/data/src/redis";
 
 dotenv.config();
 

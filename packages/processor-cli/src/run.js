@@ -1,9 +1,9 @@
 // @flow
+import {redis} from "@tracking-exposed/data";
 import {envOr} from "@tracking-exposed/utils";
 import dotenv from "dotenv";
 import cli from "./cli";
 import loader from "./loader";
-import {client as redisClient, pollFromStream} from "./redis";
 import {runForever} from "./loop";
 
 dotenv.config();
@@ -32,7 +32,7 @@ const registerShutdown = (fn: () => mixed): void => {
 
 export default async (opts: {[string]: mixed} = {}) => {
   const cfg = Object.assign(cli().parse(), opts);
-  const redis = redisClient(redisHost, redisPort);
+  const redisClient = redis.client(redisHost, redisPort);
   const processor = await loader(cfg.processor);
 
   // eslint-disable-next-line no-console
@@ -43,7 +43,7 @@ export default async (opts: {[string]: mixed} = {}) => {
   let id = "$";
 
   runForever(async () => {
-    const events = await pollFromStream(redis, cfg.stream, id);
+    const events = await redis.pollFromStream(redisClient, cfg.stream, id);
     const lastEvent = events.slice(-1)[0];
     // eslint-disable-next-line prefer-destructuring
     id = lastEvent.id;

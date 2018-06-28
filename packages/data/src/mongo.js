@@ -8,7 +8,6 @@ type Impression = {
 
 // FIXME: flow's type definition for mongodb inject any for all mongodb
 //        operations. Verify any return from any mongodb operation.
-
 export const client = async (
   connectionString: string,
 ): Promise<MongoClient> => {

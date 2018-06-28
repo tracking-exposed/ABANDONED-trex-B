@@ -18,6 +18,7 @@
     "nock": "^9.3.3"
   },
   "dependencies": {
+    "@tracking-exposed/data": "0.1.0",
     "@tracking-exposed/processor-cli": "0.1.0",
     "@tracking-exposed/utils": "0.1.0",
     "dotenv": "^6.0.0",
