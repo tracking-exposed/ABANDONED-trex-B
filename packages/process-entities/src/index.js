@@ -30,7 +30,11 @@ const processor = async (
     event.impressionId,
   );
 
-  if (impression && impression.text) {
+  if (
+    impression &&
+    impression.visibility === "public" &&
+    impression.html.text
+  ) {
     const annotations = await extractEntities(impression.text, dandelionToken);
     await Promise.all(
       annotations.map((annotation) =>
