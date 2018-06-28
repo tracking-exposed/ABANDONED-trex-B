@@ -3,7 +3,7 @@ import Chance from "chance";
 import {MongoClient} from "mongodb";
 import MongodbMemoryServer from "mongodb-memory-server";
 
-import {fetch, store} from "../src/impressions";
+import {fetch, store, addEntities, fetchByEntity} from "../src/impressions";
 import impressions from "./fixtures/impressions";
 import htmls from "./fixtures/htmls";
 
@@ -132,5 +132,64 @@ test.serial(
       .findOne({id: impression.id}, {projection: {_id: 0}});
 
     t.deepEqual(result, expected);
+  },
+);
+
+test.serial("impressions addEntities appends a new entity", async (t) => {
+  const mongoUri = await t.context.mongod.getConnectionString();
+  const mongo = await MongoClient.connect(mongoUri);
+  await addEntities(mongo, impressions[0].id, ["one", "two"]);
+
+  const result = await mongo
+    .db()
+    .collection("impressions")
+    .findOne({id: impressions[0].id}, {projection: {_id: 0}});
+
+  t.true(result.entities.includes("one"));
+  t.true(result.entities.includes("two"));
+});
+
+test.serial(
+  "impressions fetchByEntity fetches records by a single entity",
+  async (t) => {
+    const mongoUri = await t.context.mongod.getConnectionString();
+    const mongo = await MongoClient.connect(mongoUri);
+    await mongo
+      .db()
+      .collection("impressions")
+      .update({id: impressions[0].id}, {entities: ["one", "two"]});
+
+    const results = await fetchByEntity(mongo, "one");
+
+    results.forEach((r) => t.true(r.entities.includes("one")));
+  },
+);
+
+test.serial(
+  "impressions fetchByEntity fetches records by multiple entities",
+  async (t) => {
+    const mongoUri = await t.context.mongod.getConnectionString();
+    const mongo = await MongoClient.connect(mongoUri);
+    const records = [
+      {id: chance.guid(), htmlId: chance.guid(), entities: ["one"]},
+      {id: chance.guid(), htmlId: chance.guid(), entities: ["one", "two"]},
+      {
+        id: chance.guid(),
+        htmlId: chance.guid(),
+        entities: ["one", "two", "three"],
+      },
+      {id: chance.guid(), htmlId: chance.guid(), entities: ["two", "three"]},
+      {id: chance.guid(), htmlId: chance.guid(), entities: ["three"]},
+    ];
+    await mongo
+      .db()
+      .collection("impressions")
+      .insert(records);
+
+    const results = await fetchByEntity(mongo, ["one", "two"]);
+
+    results.forEach((r) =>
+      t.true(r.entities.includes("one") && r.entities.includes("two")),
+    );
   },
 );

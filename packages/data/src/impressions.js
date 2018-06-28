@@ -1,6 +1,6 @@
 // @flow
 import type {MongoClient} from "mongodb";
-import {findOneBy, upsertOne} from "./mongo";
+import {findOneBy, upsertOne, addToSet, findByMember} from "./mongo";
 
 type HtmlSnippet = {
   id: string,
@@ -93,7 +93,33 @@ export const store = async (
   ]);
 };
 
+export const addEntities = async (
+  mongo: MongoClient,
+  id: string,
+  entities: string[],
+): Promise<void> => addToSet(mongo, "impressions", {id}, "entities", entities);
+
+export const fetchByEntity = async (
+  mongo: MongoClient,
+  entities: string | string[],
+): Promise<Array<Impression>> => {
+  const impressions = await findByMember(
+    mongo,
+    "impressions",
+    "entities",
+    entities,
+  );
+  return Promise.all(
+    impressions.map(async (impression) => {
+      const html = await findOneBy(mongo, "htmls", {id: impression.htmlId});
+      return Object.assign({}, impression, {html});
+    }),
+  );
+};
+
 export default {
   fetch,
   store,
+  addEntities,
+  fetchByEntity,
 };
