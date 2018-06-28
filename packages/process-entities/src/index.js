@@ -35,7 +35,16 @@ const processor = async (
     impression.visibility === "public" &&
     impression.html.text
   ) {
-    const annotations = await extractEntities(impression.text, dandelionToken);
+    const annotations = await extractEntities(
+      impression.html.text,
+      dandelionToken,
+    );
+
+    await impressions.addEntities(
+      await mongoClient(),
+      impression.id,
+      annotations.map(({title}) => title),
+    );
     await Promise.all(
       annotations.map((annotation) =>
         redis.publishToStream(redisClient(), cfg.streamTo, annotation),
