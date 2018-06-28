@@ -31,7 +31,7 @@ export const client = (host: string, port: number): Redis => {
   Redis.prototype.xadd = xadd;
   // $FlowFixMe
   Redis.prototype.xread = xread;
-  const redis = new Redis({host, port});
+  const redis = new Redis({host, port, lazyConnect: true});
   return redis;
 };
 

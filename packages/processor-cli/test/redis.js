@@ -24,7 +24,7 @@ test("redis converts an object to event data", (t) => {
 });
 
 test("redis client implements the stream API", (t) => {
-  const redisClient = client("host", 1);
+  const redisClient = client("localhost", 6379);
   t.true(typeof redisClient.xadd === "function");
   t.true(typeof redisClient.xread === "function");
 });
