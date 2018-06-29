@@ -38,7 +38,7 @@ test("poll for next event in a blocking manner", async (t) => {
   const id = await redis.xadd("mystream", "*", "key", "value");
   const events = await op;
 
-  t.deepEqual(events, [{stream: "mystream", key: "value", id}]);
+  t.deepEqual(events, [{stream: "mystream", id, data: {key: "value"}}]);
 });
 
 test("poll for event since id in a blocking manner", async (t) => {
@@ -50,7 +50,7 @@ test("poll for event since id in a blocking manner", async (t) => {
   const id = await redis.xadd("mystream", "*", "key", "value");
   const events = await op;
 
-  t.deepEqual(events, [{stream: "mystream", key: "value", id}]);
+  t.deepEqual(events, [{stream: "mystream", id, data: {key: "value"}}]);
 });
 
 test("push an event to a stream", async (t) => {

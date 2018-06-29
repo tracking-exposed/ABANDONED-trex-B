@@ -6,8 +6,7 @@ export type RedisClient = Redis;
 export type StreamEvent = {
   stream: string,
   id: string,
-  impressionId: string,
-  [string]: string,
+  data: {[string]: string},
 };
 
 export const fromEvent = (event: string[]): {[string]: string} =>
@@ -59,7 +58,7 @@ export const pollFromStream = async (
       memo.concat(
         events.map(([id, eventData]) => {
           const eventObj = fromEvent(eventData);
-          return {stream, id, ...eventObj};
+          return {stream, id, data: eventObj};
         }),
       ),
     [],

@@ -44,6 +44,12 @@ export default async (opts: {[string]: mixed} = {}) => {
 
   runForever(async () => {
     const events = await redis.pollFromStream(redisClient, cfg.stream, id);
+    // eslint-disable-next-line no-console
+    console.log(
+      `Polled ${events.length} event${events.length > 1 ? "s" : ""} from ${
+        cfg.stream
+      }.`,
+    );
     const lastEvent = events.slice(-1)[0];
     // eslint-disable-next-line prefer-destructuring
     id = lastEvent.id;

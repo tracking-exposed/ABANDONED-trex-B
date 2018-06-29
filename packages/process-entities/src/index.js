@@ -22,12 +22,12 @@ const redisClient = () => redis.client(redisHost, redisPort);
 const mongoClient = ageingMemoize(() => mongo.client(mongoUri), 10000);
 
 const processor = async (
-  event: StreamEvent,
+  {data}: StreamEvent,
   cfg: {streamTo: string},
 ): Promise<void> => {
   const impression = await impressions.fetch(
     await mongoClient(),
-    event.impressionId,
+    data.impressionId,
   );
 
   if (
