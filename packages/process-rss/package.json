@@ -1,5 +1,5 @@
 {
-  "name": "@tracking-exposed/processor-rss",
+  "name": "@tracking-exposed/process-rss",
   "description": "Generate RSS feeds from entity events.",
   "version": "0.1.0",
   "main": "dist/index.js",
@@ -11,7 +11,7 @@
   ],
   "repository": "https://github.com/tracking-exposed/tracking-exposed",
   "homepage":
-    "https://github.com/tracking-exposed/tracking-exposed/tree/master/packages/processor-rss#readme",
+    "https://github.com/tracking-exposed/tracking-exposed/tree/master/packages/process-rss#readme",
   "author": "Christo <christo@cryptodrunks.net>",
   "files": ["dist", "src"],
   "devDependencies": {
