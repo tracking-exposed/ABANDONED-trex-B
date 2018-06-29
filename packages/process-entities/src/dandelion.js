@@ -2,22 +2,12 @@
 import {URL} from "url";
 import fetch from "isomorphic-fetch";
 
-export type DandelionAnnotation = {
-  id: string,
-  label: string,
-  spot: string,
-  title: string,
-  uri: string,
-  confidence: number,
-  language: string,
-  fetchedAt: string,
-  languageConfidence: number,
-};
+import type {Entity} from "@tracking-exposed/data/src/entities";
 
 export const extractEntities = async (
   text: string,
   token: string,
-): Promise<DandelionAnnotation[]> => {
+): Promise<Entity[]> => {
   const url = new URL("https://api.dandelion.eu/datatxt/nex/v1");
   const params = {token, text, min_confidence: "0.3"};
   Object.keys(params).forEach((key) =>

@@ -66,8 +66,31 @@ export const pollFromStream = async (
   );
 };
 
+export const addToSet = async (
+  redisClient: RedisClient,
+  key: string,
+  members: string | string[],
+): Promise<void> => {
+  const data = await redisClient.sadd(
+    key,
+    ...(Array.isArray(members) ? members : [members]),
+  );
+
+  return data;
+};
+
+export const fetchSet = async (
+  redisClient: RedisClient,
+  key: string,
+): Promise<Array<string>> => {
+  const data = await redisClient.smembers(key);
+  return data;
+};
+
 export default {
   client,
   publishToStream,
   pollFromStream,
+  addToSet,
+  fetchSet,
 };

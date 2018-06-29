@@ -7,6 +7,8 @@ import {
   client,
   pollFromStream,
   publishToStream,
+  addToSet,
+  fetchSet,
 } from "../src/redis";
 
 test("redis converts event data to an object", (t) => {
@@ -57,4 +59,57 @@ test("push an event to a stream", async (t) => {
   const id = await publishToStream(redis, "mystream", {key: "value"});
 
   t.deepEqual(redis.data.get("mystream"), [[id, ["key", "value"]]]);
+});
+
+test("redis addToSet adds a single member to a set", async (t) => {
+  const redis = new MockRedis();
+
+  const expected = "one";
+  await addToSet(redis, "myset", expected);
+
+  t.deepEqual(redis.data.get("myset"), new Set([expected]));
+  t.is(redis.data.get("myset").size, 1);
+});
+
+test("redis addToSet adds multiple members to a set", async (t) => {
+  const redis = new MockRedis();
+
+  const expected = ["one", "two"];
+  await addToSet(redis, "myset", expected);
+
+  t.deepEqual(redis.data.get("myset"), new Set(expected));
+  t.is(redis.data.get("myset").size, 2);
+});
+
+test("redis addToSet should not add duplicates", async (t) => {
+  const expected = ["one", "two"];
+  const redis = new MockRedis({
+    data: {
+      myset: new Set(expected),
+    },
+  });
+
+  await addToSet(redis, "myset", ["one"]);
+
+  t.deepEqual(redis.data.get("myset"), new Set(expected));
+  t.is(redis.data.get("myset").size, 2);
+});
+
+test("redis fetchSet retrieves a set", async (t) => {
+  const expected = ["one", "two"];
+  const redis = new MockRedis({
+    data: {
+      myset: new Set(expected),
+    },
+  });
+
+  const result = await fetchSet(redis, "myset");
+
+  t.deepEqual(result, expected);
+});
+
+test("redis fetchSet retrieves an empty list if set doesn't exist", async (t) => {
+  const redis = new MockRedis();
+  const result = await fetchSet(redis, "myset");
+  t.deepEqual(result, []);
 });
