@@ -22,10 +22,12 @@
     "flow-bin": "^0.74.0",
     "ioredis-mock": "^3.10.1",
     "mongodb-memory-server": "^1.8.0",
-    "sinon": "^6.0.0"
+    "sinon": "^6.0.0",
+    "xml2js": "^0.4.19"
   },
   "dependencies": {
     "ioredis": "^3.2.2",
-    "mongodb": "^3.0.10"
+    "mongodb": "^3.0.10",
+    "rss": "^1.2.2"
   }
 }

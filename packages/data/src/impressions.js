@@ -1,6 +1,8 @@
 // @flow
 import type {MongoClient} from "mongodb";
+import RSS from "rss";
 import {findOneBy, upsertOne, addToSet, findByMember} from "./mongo";
+import {sha1} from "./utils";
 
 type HtmlSnippet = {
   id: string,
@@ -12,7 +14,7 @@ type HtmlSnippet = {
   // feedBasicInfo
   feedBasicInfo: boolean,
   postId?: string,
-  permalink?: string,
+  permaLink?: string,
   // eslint-disable-next-line flowtype/space-after-type-colon
   hrefType?:
     | "post"
@@ -117,9 +119,33 @@ export const fetchByEntity = async (
   );
 };
 
+export const toRss = (url: string, impressions: Impression[]) => {
+  const feed = new RSS({
+    title: "Great RSS feed.",
+    feed_url: url,
+    site_url: "https://tracking.exposed",
+  });
+  impressions.forEach((impression) => {
+    if (
+      impression.html != null &&
+      impression.html.permaLink != null &&
+      impression.html.text != null
+    ) {
+      feed.item({
+        title: "Some title",
+        description: impression.html.text,
+        url: impression.html.permaLink,
+        guid: sha1(impression.html.text),
+      });
+    }
+  });
+  return feed.xml();
+};
+
 export default {
   fetch,
   store,
   addEntities,
   fetchByEntity,
+  toRss,
 };

@@ -1,9 +1,16 @@
 import test from "ava";
 import Chance from "chance";
+import xml2js from "xml2js";
 import {MongoClient} from "mongodb";
 import MongodbMemoryServer from "mongodb-memory-server";
 
-import {fetch, store, addEntities, fetchByEntity} from "../src/impressions";
+import {
+  fetch,
+  store,
+  addEntities,
+  fetchByEntity,
+  toRss,
+} from "../src/impressions";
 import impressions from "./fixtures/impressions";
 import htmls from "./fixtures/htmls";
 
@@ -193,3 +200,25 @@ test.serial(
     );
   },
 );
+
+test.serial("impressions toRss creates an RSS XML", async (t) => {
+  const mongoUri = await t.context.mongod.getConnectionString();
+  const mongo = await MongoClient.connect(mongoUri);
+  const item = await fetch(mongo, impressions[0].id);
+  const feed = toRss("feed.xml", [item]);
+  xml2js.parseString(feed, (err, result) => {
+    t.falsy(err);
+    const {channel} = result.rss;
+    const [feedItem] = channel[0].item;
+    t.true(Object.keys(result.rss.$).includes("xmlns:atom"));
+    t.is(channel.length, 1);
+    t.true(Object.keys(channel[0]).includes("title"));
+    t.true(Object.keys(channel[0]).includes("description"));
+    t.true(Object.keys(channel[0]).includes("link"));
+    t.is(channel[0].item.length, 1);
+    t.true(Object.keys(feedItem).includes("title"));
+    t.true(Object.keys(feedItem).includes("description"));
+    t.true(Object.keys(feedItem).includes("link"));
+    t.true(Object.keys(feedItem).includes("guid"));
+  });
+});
