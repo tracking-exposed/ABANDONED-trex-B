@@ -1,4 +1,5 @@
 // @flow
+import path from "path";
 import differenceInMilliseconds from "date-fns/difference_in_milliseconds";
 
 export const ageingMemoize = (
@@ -43,9 +44,32 @@ export const registerShutdown = (fn: () => mixed): void => {
   process.on("exit", wrapper);
 };
 
+export const loadPkg = (pkg: string): Promise<mixed> => {
+  const loader = new Promise((resolve, reject) => {
+    // If pkg is an absolute path, path,join automatically drops the path from
+    // process.cwd().
+    const pkgPath =
+      pkg.startsWith("/") || pkg.startsWith("./")
+        ? path.join(process.cwd(), pkg)
+        : pkg;
+    let mod;
+    try {
+      // eslint-disable-next-line global-require, import/no-dynamic-require
+      mod = require(pkgPath);
+    } catch (e) {
+      const reason = new Error(`Failed to load the module at ${pkgPath}.`);
+      reason.stack += `\nCaused By:\n${e.stack}`;
+      return reject(reason);
+    }
+    return resolve(mod.default ? mod.default : mod);
+  });
+  return loader;
+};
+
 export default {
   ageingMemoize,
   envOr,
   env,
   registerShutdown,
+  loadPkg,
 };

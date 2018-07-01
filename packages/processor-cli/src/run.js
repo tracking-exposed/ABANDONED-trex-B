@@ -1,9 +1,8 @@
 // @flow
 import {redis} from "@tracking-exposed/data";
-import {envOr, registerShutdown} from "@tracking-exposed/utils";
+import {envOr, registerShutdown, loadPkg} from "@tracking-exposed/utils";
 import dotenv from "dotenv";
 import cli from "./cli";
-import loader from "./loader";
 import {runForever} from "./loop";
 
 dotenv.config();
@@ -14,7 +13,7 @@ const redisPort = parseInt(envOr("6379", "TREX_REDIS_PORT"), 10);
 export default async (opts: {[string]: mixed} = {}) => {
   const cfg = Object.assign(cli().parse(), opts);
   const redisClient = redis.client(redisHost, redisPort);
-  const processor = await loader(cfg.processor);
+  const processor = await loadPkg(cfg.processor);
 
   // eslint-disable-next-line no-console
   registerShutdown(() => console.log("Shutting down."));
