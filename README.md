@@ -28,7 +28,7 @@ Tracking Exposed enables academic research and analysis on the impact of algorit
 |---------|---------|-------------|
 | [`@tracking-exposed/data`](/packages/data) | [![npm](https://img.shields.io/npm/v/@tracking-exposed/data.svg?maxAge=2592000)](https://www.npmjs.com/package/@tracking-exposed/data) | Common data layer. |
 | [`@tracking-exposed/processor-cli`](/packages/processor-cli) | [![npm](https://img.shields.io/npm/v/@tracking-exposed/processor-cli.svg?maxAge=2592000)](https://www.npmjs.com/package/@tracking-exposed/processor-cli) | Control a data processor. |
-| [`@tracking-exposed/service-cli`](/packages/service-cli) | [![npm](https://img.shields.io/npm/v/@tracking-exposed/service-cli.svg?maxAge=2592000)](https://www.npmjs.com/package/@tracking-exposed/service-cli) | Control a web service. |
+| [`@tracking-exposed/services-cli`](/packages/services-cli) | [![npm](https://img.shields.io/npm/v/@tracking-exposed/services-cli.svg?maxAge=2592000)](https://www.npmjs.com/package/@tracking-exposed/services-cli) | Control a web service. |
 | [`@tracking-exposed/utils`](/packages/utils) | [![npm](https://img.shields.io/npm/v/@tracking-exposed/utils.svg?maxAge=2592000)](https://www.npmjs.com/package/@tracking-exposed/utils) | Shared utility functions. |
 
 ### Web Services
