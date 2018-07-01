@@ -1,0 +1,31 @@
+{
+  "name": "@tracking-exposed/service-rss",
+  "description": "Subscribe to custom RSS feeds based on entities.",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "license": "GPL-3.0",
+  "keywords": [
+    "tracking exposed",
+    "rss",
+    "feed",
+    "service",
+    "micro service"
+  ],
+  "repository": "https://github.com/tracking-exposed/tracking-exposed",
+  "homepage": "https://github.com/tracking-exposed/tracking-exposed/tree/master/packages/service-rss#readme",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "ava": "1.0.0-beta.6",
+    "flow-bin": "^0.74.0"
+  },
+  "dependencies": {
+    "micro": "^9.3.2"
+  }
+}
