@@ -4,7 +4,7 @@ import findUp from "find-up";
 import fs from "fs";
 
 export default () => {
-  const configPath = findUp.sync([".servicerc", ".service.json"]);
+  const configPath = findUp.sync([".servicesrc", ".services.json"]);
   const config = configPath
     ? JSON.parse(fs.readFileSync(configPath).toString())
     : {};
