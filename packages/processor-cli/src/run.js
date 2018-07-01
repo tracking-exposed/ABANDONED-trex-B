@@ -1,6 +1,6 @@
 // @flow
 import {redis} from "@tracking-exposed/data";
-import {envOr} from "@tracking-exposed/utils";
+import {envOr, registerShutdown} from "@tracking-exposed/utils";
 import dotenv from "dotenv";
 import cli from "./cli";
 import loader from "./loader";
@@ -10,25 +10,6 @@ dotenv.config();
 
 const redisHost = envOr("localhost", "TREX_REDIS_HOST");
 const redisPort = parseInt(envOr("6379", "TREX_REDIS_PORT"), 10);
-
-const registerShutdown = (fn: () => mixed): void => {
-  let run = false;
-  const wrapper = () => {
-    if (!run) {
-      run = true;
-      fn();
-    }
-  };
-  process.on("SIGINT", () => {
-    wrapper();
-    process.exit(128);
-  });
-  process.on("SIGTERM", () => {
-    wrapper();
-    process.exit(128);
-  });
-  process.on("exit", wrapper);
-};
 
 export default async (opts: {[string]: mixed} = {}) => {
   const cfg = Object.assign(cli().parse(), opts);

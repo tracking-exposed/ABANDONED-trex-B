@@ -24,8 +24,28 @@ export const envOr = (orVal: string, key: string) =>
 
 export const env = (key: string) => envOr("", key);
 
+export const registerShutdown = (fn: () => mixed): void => {
+  let run = false;
+  const wrapper = () => {
+    if (!run) {
+      run = true;
+      fn();
+    }
+  };
+  process.on("SIGINT", () => {
+    wrapper();
+    process.exit(128);
+  });
+  process.on("SIGTERM", () => {
+    wrapper();
+    process.exit(128);
+  });
+  process.on("exit", wrapper);
+};
+
 export default {
   ageingMemoize,
   envOr,
   env,
+  registerShutdown,
 };
