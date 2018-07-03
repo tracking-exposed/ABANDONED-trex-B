@@ -101,7 +101,7 @@ export const addEntities = async (
   entities: string[],
 ): Promise<void> => addToSet(mongo, "impressions", {id}, "entities", entities);
 
-export const fetchByEntity = async (
+export const fetchByEntities = async (
   mongo: MongoClient,
   entities: string | string[],
 ): Promise<Array<Impression>> => {
@@ -146,6 +146,6 @@ export default {
   fetch,
   store,
   addEntities,
-  fetchByEntity,
+  fetchByEntities,
   toRss,
 };

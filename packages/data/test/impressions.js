@@ -8,7 +8,7 @@ import {
   fetch,
   store,
   addEntities,
-  fetchByEntity,
+  fetchByEntities,
   toRss,
 } from "../src/impressions";
 import impressions from "./fixtures/impressions";
@@ -157,7 +157,7 @@ test.serial("impressions addEntities appends a new entity", async (t) => {
 });
 
 test.serial(
-  "impressions fetchByEntity fetches records by a single entity",
+  "impressions fetchByEntities fetches records by a single entity",
   async (t) => {
     const mongoUri = await t.context.mongod.getConnectionString();
     const mongo = await MongoClient.connect(mongoUri);
@@ -166,14 +166,14 @@ test.serial(
       .collection("impressions")
       .update({id: impressions[0].id}, {entities: ["one", "two"]});
 
-    const results = await fetchByEntity(mongo, "one");
+    const results = await fetchByEntities(mongo, "one");
 
     results.forEach((r) => t.true(r.entities.includes("one")));
   },
 );
 
 test.serial(
-  "impressions fetchByEntity fetches records by multiple entities",
+  "impressions fetchByEntities fetches records by multiple entities",
   async (t) => {
     const mongoUri = await t.context.mongod.getConnectionString();
     const mongo = await MongoClient.connect(mongoUri);
@@ -193,7 +193,7 @@ test.serial(
       .collection("impressions")
       .insert(records);
 
-    const results = await fetchByEntity(mongo, ["one", "two"]);
+    const results = await fetchByEntities(mongo, ["one", "two"]);
 
     results.forEach((r) =>
       t.true(r.entities.includes("one") && r.entities.includes("two")),

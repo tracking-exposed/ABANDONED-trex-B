@@ -45,6 +45,11 @@ export const fetchFeeds = async (
   entity: string,
 ): Promise<string[]> => fetchSet(redisClient, `entities:${entity}`);
 
+export const fetchByFeed = async (
+  redisClient: RedisClient,
+  url: string,
+): Promise<string[]> => fetchSet(redisClient, `feeds:${url}`);
+
 export const publishEntities = async (
   redisClient: RedisClient,
   entities: string | string[],
@@ -59,5 +64,6 @@ export const publishEntities = async (
 export default {
   storeFeeds,
   fetchFeeds,
+  fetchByFeed,
   publishEntities,
 };
