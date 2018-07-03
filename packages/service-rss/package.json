@@ -18,14 +18,13 @@
     "dist",
     "src"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
   "devDependencies": {
     "ava": "1.0.0-beta.6",
     "flow-bin": "^0.74.0"
   },
   "dependencies": {
+    "@tracking-exposed/data": "0.1.0",
+    "@tracking-exposed/utils": "0.1.0",
     "micro": "^9.3.2"
   }
 }
