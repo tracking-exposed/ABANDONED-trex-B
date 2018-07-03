@@ -32,14 +32,10 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
     if (err.code === "ENOENT") {
       feed = impressions.toRss(req.url, []);
       send(res, 200, feed);
-      await Promise.all(
-        feedEntities.map((entity) =>
-          entities.storeFeeds(
-            redisClient(redisHost, redisPort),
-            entity,
-            req.url,
-          ),
-        ),
+      await entities.storeFeeds(
+        redisClient(redisHost, redisPort),
+        feedEntities,
+        req.url,
       );
       await Promise.all(
         feedEntities.map((entity) =>

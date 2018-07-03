@@ -22,6 +22,28 @@ test("entities storeFeeds adds multiple feeds to an entity", async (t) => {
   t.deepEqual(result, new Set(expected));
 });
 
+test("entities storeFeeds adds multiple feeds to multiple entities", async (t) => {
+  const redis = new Redis();
+  const entities = ["entity1", "entity2"];
+  const expected = [chance.url(), chance.url()];
+  await storeFeeds(redis, entities, expected);
+  entities.forEach((entity) => {
+    const result = redis.data.get(`feeds:${entity}`);
+    t.deepEqual(result, new Set(expected));
+  });
+});
+
+test("entities storeFeeds adds a single feed to multiple entities", async (t) => {
+  const redis = new Redis();
+  const entities = ["entity1", "entity2"];
+  const expected = chance.url();
+  await storeFeeds(redis, entities, expected);
+  entities.forEach((entity) => {
+    const result = redis.data.get(`feeds:${entity}`);
+    t.deepEqual(result, new Set([expected]));
+  });
+});
+
 test("entities fetchFeeds retrieves feed urls for an entity", async (t) => {
   const expected = [chance.url(), chance.url()];
   const redis = new Redis({data: {"feeds:entity": new Set(expected)}});

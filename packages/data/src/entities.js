@@ -16,11 +16,15 @@ export type Entity = {
 
 export const storeFeeds = async (
   redisClient: RedisClient,
-  entity: string,
+  entities: string | string[],
   urls: string | string[],
 ): Promise<void> => {
   // FIXME: Maybe validate urls?
-  await addToSet(redisClient, `feeds:${entity}`, urls);
+  await Promise.all(
+    (Array.isArray(entities) ? entities : [entities]).map((entity) =>
+      addToSet(redisClient, `feeds:${entity}`, urls),
+    ),
+  );
 };
 
 export const fetchFeeds = async (
