@@ -1,9 +1,10 @@
 // @flow
-import {redis, impressions, entities} from "@tracking-exposed/data";
 import {send} from "micro";
 import fs from "fs";
 import path from "path";
 import {promisify} from "util";
+import {redis, impressions, entities} from "@tracking-exposed/data";
+import {mkdirP} from "@tracking-exposed/utils";
 import type {IncomingMessage, ServerResponse} from "http";
 
 import {toEntities} from "./utils";
@@ -27,10 +28,10 @@ export default (cfg: ServiceRssCfg) => async (
   const feedEntities = toEntities(req.url);
   if (feedEntities.length === 0) return;
 
-  const feedPath = path.join(cfg.dataPath, "feeds", path.basename(req.url));
+  const feedLocation = path.join(cfg.dataPath, "feeds", path.basename(req.url));
 
   try {
-    feed = await readFile(feedPath);
+    feed = await readFile(feedLocation);
     send(res, 200, feed);
   } catch (err) {
     if (err.code === "ENOENT") {
@@ -38,7 +39,8 @@ export default (cfg: ServiceRssCfg) => async (
       send(res, 200, feed);
       await entities.storeFeeds(redisClient, feedEntities, req.url);
       await entities.publishEntities(redisClient, feedEntities);
-      await writeFile(feedPath, feed);
+      await mkdirP(path.dirname(feedLocation));
+      await writeFile(feedLocation, feed);
     } else {
       throw err;
     }

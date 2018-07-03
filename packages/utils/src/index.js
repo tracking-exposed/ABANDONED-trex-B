@@ -1,5 +1,7 @@
 // @flow
+import fs from "fs";
 import path from "path";
+import {promisify} from "util";
 import differenceInMilliseconds from "date-fns/difference_in_milliseconds";
 
 export const ageingMemoize = (
@@ -61,8 +63,28 @@ export const loadPkg = (pkg: string): Promise<mixed> => {
   return loader;
 };
 
+export const mkdirP = async (dir: string): Promise<void> => {
+  const mkdir = promisify(fs.mkdir);
+
+  try {
+    await mkdir(dir);
+  } catch (err) {
+    switch (err.code) {
+      case "EEXIST":
+        break;
+      case "ENOENT":
+        await mkdirP(path.dirname(dir));
+        await mkdirP(dir);
+        break;
+      default:
+        throw err;
+    }
+  }
+};
+
 export default {
   ageingMemoize,
   registerShutdown,
   loadPkg,
+  mkdirP,
 };

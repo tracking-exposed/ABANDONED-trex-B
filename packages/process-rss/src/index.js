@@ -2,10 +2,9 @@
 import fs from "fs";
 import path from "path";
 import {redis, mongo, entities, impressions} from "@tracking-exposed/data";
+import {mkdirP} from "@tracking-exposed/utils";
 
 import type {StreamEvent} from "@tracking-exposed/data/src/redis";
-
-import {mkdirP} from "./utils";
 
 type ProcessRssCfg = {
   redisHost: string,

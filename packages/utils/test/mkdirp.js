@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 import mockFs from "mock-fs";
 
-import {mkdirP} from "../src/utils";
+import {mkdirP} from "../src";
 
 test("utils mkdirP creates recursively directories", async (t) => {
   mockFs();
