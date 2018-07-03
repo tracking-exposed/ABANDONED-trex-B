@@ -15,13 +15,12 @@ type ServiceRssCfg = {
   dataPath: string,
 };
 
-const writeFile = promisify(fs.writeFile);
-const readFile = promisify(fs.readFile);
-
 export default (cfg: ServiceRssCfg) => async (
   req: IncomingMessage,
   res: ServerResponse,
 ) => {
+  const writeFile = promisify(fs.writeFile);
+  const readFile = promisify(fs.readFile);
   const redisClient = redis.client(cfg.redisHost, cfg.redisPort);
 
   let feed;

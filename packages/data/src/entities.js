@@ -1,4 +1,5 @@
 // @flow
+import {basename} from "path";
 import type RedisClient from "ioredis";
 import {addToSet, fetchSet, publishToStream} from "./redis";
 
@@ -19,10 +20,22 @@ export const storeFeeds = async (
   entities: string | string[],
   urls: string | string[],
 ): Promise<void> => {
+  const prettyEntities = (Array.isArray(entities) ? entities : [entities]).map(
+    (e) => e.toLowerCase(),
+  );
+  const prettyUrls = (Array.isArray(urls) ? urls : [urls]).map((u) =>
+    basename(u),
+  );
+
   // FIXME: Maybe validate urls?
   await Promise.all(
-    (Array.isArray(entities) ? entities : [entities]).map((entity) =>
-      addToSet(redisClient, `feeds:${entity}`, urls),
+    prettyEntities.map((entity) =>
+      addToSet(redisClient, `entities:${entity}`, prettyUrls),
+    ),
+  );
+  await Promise.all(
+    prettyUrls.map((url) =>
+      addToSet(redisClient, `feeds:${url}`, prettyEntities),
     ),
   );
 };
@@ -30,7 +43,7 @@ export const storeFeeds = async (
 export const fetchFeeds = async (
   redisClient: RedisClient,
   entity: string,
-): Promise<string[]> => fetchSet(redisClient, `feeds:${entity}`);
+): Promise<string[]> => fetchSet(redisClient, `entities:${entity}`);
 
 export const publishEntities = async (
   redisClient: RedisClient,
