@@ -1,11 +1,8 @@
 // @flow
 import {registerShutdown, loadPkg} from "@tracking-exposed/utils";
 import micro from "micro";
-import dotenv from "dotenv";
 
 import cli from "./cli";
-
-dotenv.config();
 
 export default async (opts: {[string]: mixed} = {}) => {
   const cfg = Object.assign(cli().parse(), opts);
@@ -16,6 +13,6 @@ export default async (opts: {[string]: mixed} = {}) => {
   // eslint-disable-next-line no-console
   console.log("Starting to serve.");
 
-  const server = micro(service);
+  const server = micro(service(cfg));
   server.listen(cfg.port);
 };

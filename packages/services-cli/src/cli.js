@@ -25,6 +25,21 @@ export default () => {
         })
         .alias("service", "s"),
     )
+    .option("redis-host", {
+      default: "localhost",
+      type: "string",
+      desc: "The host name of the Redis instance.",
+    })
+    .options("redis-port", {
+      default: 6379,
+      type: "number",
+      desc: "The port of the Redis instance.",
+    })
+    .option("data-path", {
+      default: "/tmp",
+      type: "string",
+      desc: "The path to the data base directory.",
+    })
     .config(config)
     .env("TREX")
     .pkgConf("service")

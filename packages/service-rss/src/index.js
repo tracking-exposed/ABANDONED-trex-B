@@ -1,6 +1,5 @@
 // @flow
 import {redis, impressions, entities} from "@tracking-exposed/data";
-import {envOr} from "@tracking-exposed/utils";
 import {send} from "micro";
 import fs from "fs";
 import path from "path";
@@ -9,8 +8,11 @@ import type {IncomingMessage, ServerResponse} from "http";
 
 import {toEntities} from "./utils";
 
-const redisHost = envOr("localhost", "TREX_REDIS_HOST");
-const redisPort = parseInt(envOr("6379", "TREX_REDIS_PORT"), 10);
+type ServiceRssCfg = {
+  redisHost: string,
+  redisPort: number,
+  dataPath: string,
+};
 
 const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
@@ -18,12 +20,15 @@ const readFile = promisify(fs.readFile);
 const redisClient = (host: string = "localhost", port: number = 6379) =>
   redis.client(host, port);
 
-export default async (req: IncomingMessage, res: ServerResponse) => {
+export default (cfg: ServiceRssCfg) => async (
+  req: IncomingMessage,
+  res: ServerResponse,
+) => {
   let feed;
   const feedEntities = toEntities(req.url);
   if (feedEntities.length === 0) return;
 
-  const feedPath = `/tmp/feeds/${path.basename(req.url)}`;
+  const feedPath = path.join(cfg.dataPath, "feeds", path.basename(req.url));
 
   try {
     feed = await readFile(feedPath);
@@ -33,13 +38,17 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
       feed = impressions.toRss(req.url, []);
       send(res, 200, feed);
       await entities.storeFeeds(
-        redisClient(redisHost, redisPort),
+        redisClient(cfg.redisHost, cfg.redisPort),
         feedEntities,
         req.url,
       );
       await Promise.all(
         feedEntities.map((entity) =>
-          redis.publishToStream(redisClient(), "entities", {title: entity}),
+          redis.publishToStream(
+            redisClient(cfg.redisHost, cfg.redisPort),
+            "entities",
+            {title: entity},
+          ),
         ),
       );
       await writeFile(feedPath, feed);
