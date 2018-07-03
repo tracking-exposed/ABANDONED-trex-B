@@ -17,13 +17,12 @@ type ServiceRssCfg = {
 const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
 
-const redisClient = (host: string = "localhost", port: number = 6379) =>
-  redis.client(host, port);
-
 export default (cfg: ServiceRssCfg) => async (
   req: IncomingMessage,
   res: ServerResponse,
 ) => {
+  const redisClient = redis.client(cfg.redisHost, cfg.redisPort);
+
   let feed;
   const feedEntities = toEntities(req.url);
   if (feedEntities.length === 0) return;
@@ -37,20 +36,8 @@ export default (cfg: ServiceRssCfg) => async (
     if (err.code === "ENOENT") {
       feed = impressions.toRss(req.url, []);
       send(res, 200, feed);
-      await entities.storeFeeds(
-        redisClient(cfg.redisHost, cfg.redisPort),
-        feedEntities,
-        req.url,
-      );
-      await Promise.all(
-        feedEntities.map((entity) =>
-          redis.publishToStream(
-            redisClient(cfg.redisHost, cfg.redisPort),
-            "entities",
-            {title: entity},
-          ),
-        ),
-      );
+      await entities.storeFeeds(redisClient, feedEntities, req.url);
+      await entities.publishEntities(redisClient, feedEntities);
       await writeFile(feedPath, feed);
     } else {
       throw err;

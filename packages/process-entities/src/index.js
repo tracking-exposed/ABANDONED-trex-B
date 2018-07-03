@@ -1,5 +1,5 @@
 // @flow
-import {redis, mongo, impressions} from "@tracking-exposed/data";
+import {redis, mongo, impressions, entities} from "@tracking-exposed/data";
 import type {StreamEvent} from "@tracking-exposed/data/src/redis";
 
 import {extractEntities} from "./dandelion";
@@ -34,17 +34,9 @@ const processor = async (
       impression.html.text,
       cfg.dandelionToken,
     );
-
-    await impressions.addEntities(
-      mongoClient,
-      impression.id,
-      annotations.map(({title}) => title),
-    );
-    await Promise.all(
-      annotations.map((annotation) =>
-        redis.publishToStream(redisClient, cfg.streamTo, annotation),
-      ),
-    );
+    const titles = annotations.map(({title}) => title);
+    await impressions.addEntities(mongoClient, impression.id, titles);
+    await entities.publishEntities(redisClient, titles);
   }
 };
 

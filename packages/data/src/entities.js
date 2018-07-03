@@ -1,6 +1,6 @@
 // @flow
 import type RedisClient from "ioredis";
-import {addToSet, fetchSet} from "./redis";
+import {addToSet, fetchSet, publishToStream} from "./redis";
 
 export type Entity = {
   id: string,
@@ -32,7 +32,19 @@ export const fetchFeeds = async (
   entity: string,
 ): Promise<string[]> => fetchSet(redisClient, `feeds:${entity}`);
 
+export const publishEntities = async (
+  redisClient: RedisClient,
+  entities: string | string[],
+): Promise<void> => {
+  await Promise.all(
+    (Array.isArray(entities) ? entities : [entities]).map((entity) =>
+      publishToStream(redisClient, "entites", {entity}),
+    ),
+  );
+};
+
 export default {
   storeFeeds,
   fetchFeeds,
+  publishEntities,
 };
