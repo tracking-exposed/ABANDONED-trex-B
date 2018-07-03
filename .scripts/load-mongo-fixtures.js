@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 const path = require("path");
-const dotenv = require("dotenv");
 const {MongoClient} = require("mongodb");
 
 const impressions = require(path.join(
@@ -12,12 +11,9 @@ const htmls = require(path.join(
   "packages/data/test/fixtures/htmls",
 ));
 
-
-dotenv.config();
-
-const mongoHost = process.env.TREX_MONGO_HOST;
-const mongoPort = process.env.TREX_MONGO_PORT;
-const mongoDb = process.env.TREX_MONGO_DB;
+const mongoHost = "localhost";
+const mongoPort = 27017;
+const mongoDb = "tracking-exposed";
 
 const mongoUri = `mongodb://${mongoHost}:${mongoPort}/${mongoDb}`;
 
