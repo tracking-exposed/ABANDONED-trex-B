@@ -5,6 +5,8 @@
   "main": "dist/index.js",
   "license": "GPL-3.0",
   "keywords": [
+    "tracking-exposed",
+    "tracking exposed",
     "rss",
     "rss feed",
     "feed"
@@ -24,9 +26,6 @@
   },
   "dependencies": {
     "@tracking-exposed/data": "0.1.0",
-    "@tracking-exposed/processor-cli": "0.1.0",
-    "@tracking-exposed/utils": "0.1.0",
-    "dotenv": "^6.0.0",
     "rss": "^1.2.2"
   }
 }

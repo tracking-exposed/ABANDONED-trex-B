@@ -20,11 +20,6 @@ export const ageingMemoize = (
   };
 };
 
-export const envOr = (orVal: string, key: string) =>
-  process.env[key] == null ? orVal : process.env[key];
-
-export const env = (key: string) => envOr("", key);
-
 export const registerShutdown = (fn: () => mixed): void => {
   let run = false;
   const wrapper = () => {
@@ -68,8 +63,6 @@ export const loadPkg = (pkg: string): Promise<mixed> => {
 
 export default {
   ageingMemoize,
-  envOr,
-  env,
   registerShutdown,
   loadPkg,
 };

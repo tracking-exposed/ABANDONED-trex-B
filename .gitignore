@@ -19,5 +19,7 @@ dist
 *.iml
 .vscode
 !keep
-.env
-feeds
+.processor.json
+.processorrc
+.services.json
+.servicesrc

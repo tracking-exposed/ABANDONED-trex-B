@@ -1,18 +1,12 @@
 // @flow
 import {redis} from "@tracking-exposed/data";
-import {envOr, registerShutdown, loadPkg} from "@tracking-exposed/utils";
-import dotenv from "dotenv";
+import {registerShutdown, loadPkg} from "@tracking-exposed/utils";
 import cli from "./cli";
 import {runForever} from "./loop";
 
-dotenv.config();
-
-const redisHost = envOr("localhost", "TREX_REDIS_HOST");
-const redisPort = parseInt(envOr("6379", "TREX_REDIS_PORT"), 10);
-
 export default async (opts: {[string]: mixed} = {}) => {
   const cfg = Object.assign(cli().parse(), opts);
-  const redisClient = redis.client(redisHost, redisPort);
+  const redisClient = redis.client(cfg.redisHost, cfg.redisPort);
   const processor = await loadPkg(cfg.processor);
 
   // eslint-disable-next-line no-console

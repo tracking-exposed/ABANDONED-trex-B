@@ -21,14 +21,12 @@
     "flow-bin": "^0.74.0",
     "ioredis-mock": "^3.10.1",
     "mock-fs": "^4.5.0",
-    "mock-require": "^3.0.2",
     "mongodb-memory-server": "^1.8.0",
     "sinon": "^6.0.0"
   },
   "dependencies": {
     "@tracking-exposed/data": "0.1.0",
     "@tracking-exposed/utils": "0.1.0",
-    "dotenv": "^6.0.0",
     "find-up": "^3.0.0",
     "ioredis": "^3.2.2",
     "mongodb": "^3.0.10",
