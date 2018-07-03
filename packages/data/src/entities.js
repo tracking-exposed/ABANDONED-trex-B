@@ -51,7 +51,7 @@ export const publishEntities = async (
 ): Promise<void> => {
   await Promise.all(
     (Array.isArray(entities) ? entities : [entities]).map((entity) =>
-      publishToStream(redisClient, "entites", {entity}),
+      publishToStream(redisClient, "entities", {entity}),
     ),
   );
 };

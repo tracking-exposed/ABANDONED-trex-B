@@ -25,7 +25,7 @@ const processor = async (
   const mongoClient = await mongo.client(mongoUri);
 
   await mkdirP(feedsLocation);
-  const {title: entity} = data;
+  const {entity} = data;
   const urls = await entities.fetchFeeds(redisClient, entity);
   if (urls.length === 0) return;
 

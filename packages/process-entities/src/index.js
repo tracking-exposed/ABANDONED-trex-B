@@ -34,7 +34,7 @@ const processor = async (
       impression.html.text,
       cfg.dandelionToken,
     );
-    const titles = annotations.map(({title}) => title);
+    const titles = annotations.map(({title}) => title.toLowerCase());
     await impressions.addEntities(mongoClient, impression.id, titles);
     await entities.publishEntities(redisClient, titles);
   }
