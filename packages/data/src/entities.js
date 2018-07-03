@@ -2,6 +2,7 @@
 import {basename} from "path";
 import type RedisClient from "ioredis";
 import {addToSet, fetchSet, publishToStream} from "./redis";
+import {sanitize} from "./feeds";
 
 export type Entity = {
   id: string,
@@ -24,7 +25,7 @@ export const storeFeeds = async (
     (e) => e.toLowerCase(),
   );
   const prettyUrls = (Array.isArray(urls) ? urls : [urls]).map((u) =>
-    basename(u),
+    sanitize(basename(u)),
   );
 
   // FIXME: Maybe validate urls?
@@ -48,7 +49,7 @@ export const fetchFeeds = async (
 export const fetchByFeed = async (
   redisClient: RedisClient,
   url: string,
-): Promise<string[]> => fetchSet(redisClient, `feeds:${url}`);
+): Promise<string[]> => fetchSet(redisClient, `feeds:${sanitize(url)}`);
 
 export const publishEntities = async (
   redisClient: RedisClient,

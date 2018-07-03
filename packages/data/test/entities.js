@@ -7,9 +7,15 @@ import {storeFeeds, fetchFeeds, fetchByFeed} from "../src/entities";
 
 const chance = new Chance();
 
+const genEntity = () =>
+  chance.string({
+    pool:
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()-_~:?#[]",
+  });
+
 test("entities storeFeeds adds a single feed to a single entity", async (t) => {
   const redis = new Redis();
-  const expectedEntity = chance.string();
+  const expectedEntity = genEntity();
   const expectedFeed = chance.url();
   const expectedEntityBase = expectedEntity.toLowerCase();
   const expectedFeedBase = basename(expectedFeed);
@@ -25,7 +31,7 @@ test("entities storeFeeds adds a single feed to a single entity", async (t) => {
 
 test("entities storeFeeds adds multiple feeds to a single entity", async (t) => {
   const redis = new Redis();
-  const expectedEntity = chance.string();
+  const expectedEntity = genEntity();
   const expectedFeeds = [chance.url(), chance.url()];
   const expectedEntityBase = expectedEntity.toLowerCase();
   const expectedFeedsBase = expectedFeeds.map((f) => basename(f));
@@ -43,7 +49,7 @@ test("entities storeFeeds adds multiple feeds to a single entity", async (t) => 
 
 test("entities storeFeeds adds multiple feeds to multiple entities", async (t) => {
   const redis = new Redis();
-  const expectedEntities = [chance.string(), chance.string()];
+  const expectedEntities = [genEntity(), genEntity()];
   const expectedFeeds = [chance.url(), chance.url()];
   const expectedEntitiesBase = expectedEntities.map((e) => e.toLowerCase());
   const expectedFeedsBase = expectedFeeds.map((f) => basename(f));
@@ -63,7 +69,7 @@ test("entities storeFeeds adds multiple feeds to multiple entities", async (t) =
 
 test("entities storeFeeds adds a single feed to multiple entities", async (t) => {
   const redis = new Redis();
-  const expectedEntities = [chance.string(), chance.string()];
+  const expectedEntities = [genEntity(), genEntity()];
   const expectedFeed = chance.url();
   const expectedFeedBase = basename(expectedFeed);
   const expectedEntitiesBase = expectedEntities.map((e) => e.toLowerCase());
@@ -79,8 +85,25 @@ test("entities storeFeeds adds a single feed to multiple entities", async (t) =>
   });
 });
 
+test("entities storeFeeds is agnostic to entity order", async (t) => {
+  const redis = new Redis();
+  const entity1 = genEntity();
+  const entity2 = genEntity();
+  const url1 = `${entity1}+${entity2}.xml`;
+  const url2 = `${entity2}+${entity1}.xml`;
+
+  await storeFeeds(redis, [entity1, entity2], url1);
+  await storeFeeds(redis, [entity1, entity2], url2);
+
+  t.is(1, redis.data.keys().filter((k) => k.startsWith("feeds")).length);
+  t.deepEqual(
+    redis.data.get(`entities:${entity1}`),
+    redis.data.get(`entities:${entity2}`),
+  );
+});
+
 test("entities fetchFeeds retrieves feed urls for an entity", async (t) => {
-  const entity = chance.string();
+  const entity = genEntity();
   const expected = [chance.url(), chance.url()];
   const redis = new Redis({data: {[`entities:${entity}`]: new Set(expected)}});
 
@@ -97,7 +120,7 @@ test("entities fetchFeeds retrieves an empty array if entity doesn't exist", asy
 
 test("entities fetchByFeed retrieves entities for a given feed url", async (t) => {
   const url = basename(chance.url());
-  const expected = [chance.string(), chance.string()];
+  const expected = [genEntity(), genEntity()];
   const redis = new Redis({data: {[`feeds:${url}`]: new Set(expected)}});
 
   const result = await fetchByFeed(redis, url);
