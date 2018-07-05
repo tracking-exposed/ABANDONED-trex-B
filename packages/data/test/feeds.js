@@ -16,12 +16,6 @@ test("feeds toEntities can handle single entity urls", (t) => {
   t.deepEqual(result, expected);
 });
 
-test("feeds toEntities accepts url with xml and without", (t) => {
-  const url1 = "a.xml";
-  const url2 = "a";
-  t.deepEqual(toEntities(url1), toEntities(url2));
-});
-
 test("feeds toEntities removes duplicate elements", (t) => {
   const url = "a+a.xml";
   const expected = ["a"];
@@ -29,16 +23,29 @@ test("feeds toEntities removes duplicate elements", (t) => {
   t.deepEqual(result, expected);
 });
 
+test("feeds toEntities accepts full URL strings as input", (t) => {
+  const url = "http://host:1234/path/to/a.xml";
+  const expected = ["a"];
+  const result = toEntities(url);
+  t.deepEqual(result, expected);
+});
+
+test("feeds toEntities returns no entities for invalid URLs", (t) => {
+  const url = "http://host:1234/path/to/a";
+  const result = toEntities(url);
+  t.deepEqual(result, []);
+});
+
 test("feeds toUrl sorts and joins entities into an url", (t) => {
   const entities = ["a", "c", "b"];
-  const expected = "a+b+c";
+  const expected = "a+b+c.xml";
   const result = toUrl(entities);
   t.deepEqual(result, expected);
 });
 
 test("feeds toUrl removes duplicate elements", (t) => {
   const entities = ["a", "a"];
-  const expected = "a";
+  const expected = "a.xml";
   const result = toUrl(entities);
   t.deepEqual(result, expected);
 });

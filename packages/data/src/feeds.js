@@ -1,6 +1,6 @@
 // @flow
 export const toEntities = (url: string): string[] => {
-  const match = url.match(/([\w+]*)(.xml)?$/);
+  const match = url.match(/([\w+]*).xml?$/);
   if (match == null) return [];
   const [, entities] = match;
   return Array.from(new Set(entities.split("+"))).sort((a, b) =>
@@ -14,7 +14,7 @@ export const toUrl = (entities: string[]): string => {
 
   return `${Array.from(new Set(entities))
     .sort((a, b) => a.localeCompare(b))
-    .join("+")}`;
+    .join("+")}.xml`;
 };
 
 export const sanitize = (url: string): string => {
