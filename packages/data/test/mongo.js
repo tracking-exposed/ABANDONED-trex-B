@@ -1,4 +1,6 @@
 import test from "ava";
+import sinon from "sinon";
+import proxyquire from "proxyquire";
 import Chance from "chance";
 import {MongoClient, MongoError} from "mongodb";
 import MongodbMemoryServer from "mongodb-memory-server";
@@ -22,12 +24,41 @@ test.serial("mongo client creates a connection", async (t) => {
   const mongoUri = await t.context.mongod.getConnectionString();
   const mongo = await client(mongoUri);
   t.true(await mongo.isConnected());
+  await client.reset();
 });
 
 test.serial("mongo client throws an error if it can't connect", async (t) => {
   const mongoUri = "mongodb://non-existent:0000/invalid";
   await t.throws(client(mongoUri), MongoError);
 });
+
+test.serial(
+  "mongo client returns a single client connection across multiple calls",
+  async (t) => {
+    const stub = sinon.stub().resolves(23);
+    const mongo = proxyquire("../src/mongo", {
+      mongodb: {MongoClient: {connect: stub}},
+    });
+    const mongoUri = await t.context.mongod.getConnectionString();
+
+    await mongo.client(mongoUri);
+    await mongo.client(mongoUri);
+    t.is(stub.callCount, 1);
+  },
+);
+
+test.serial(
+  "mongo client can reset and close existing connections",
+  async (t) => {
+    const mongoUri = await t.context.mongod.getConnectionString();
+    const mongo = await client(mongoUri);
+    t.true(await mongo.isConnected());
+    await client.reset();
+    // Resetting a disconnected connection simply returns
+    await client.reset();
+    t.false(await mongo.isConnected());
+  },
+);
 
 test.serial(
   "mongo findOneBy queries the database for a single record",

@@ -3,12 +3,20 @@ import {MongoClient} from "mongodb";
 
 // FIXME: flow's type definition for mongodb inject any for all mongodb
 //        operations. Verify any return from any mongodb operation.
-export const client = async (
-  connectionString: string,
-): Promise<MongoClient> => {
-  const mongo = await MongoClient.connect(connectionString);
-  return mongo;
-};
+export const client = (() => {
+  let cache;
+  const fn = async (connectionString: string): Promise<MongoClient> => {
+    if (cache != null) return cache;
+    cache = await MongoClient.connect(connectionString);
+    return cache;
+  };
+  fn.reset = async () => {
+    if (cache == null) return;
+    await cache.close();
+    cache = null;
+  };
+  return fn;
+})();
 
 export const findOneBy = <T>(
   mongo: MongoClient,

@@ -23,17 +23,22 @@ export const fromEvent = (event: string[]): {[string]: string} =>
 export const toEvent = (obj: {[string]: mixed}): Array<mixed> =>
   Object.keys(obj).reduce((memo, key) => memo.concat([key, obj[key]]), []);
 
-export const client = (host: string, port: number): RedisClient => {
-  // $FlowFixMe
-  const {string: xadd} = Redis.prototype.createBuiltinCommand("xadd");
-  // $FlowFixMe
-  const {string: xread} = Redis.prototype.createBuiltinCommand("xread");
-  // $FlowFixMe
-  Redis.prototype.xadd = xadd;
-  // $FlowFixMe
-  Redis.prototype.xread = xread;
-  return new Redis({host, port, lazyConnect: true});
-};
+export const client = (() => {
+  let cache;
+  return (host: string, port: number): RedisClient => {
+    if (cache != null) return cache;
+    // $FlowFixMe
+    const {string: xadd} = Redis.prototype.createBuiltinCommand("xadd");
+    // $FlowFixMe
+    const {string: xread} = Redis.prototype.createBuiltinCommand("xread");
+    // $FlowFixMe
+    Redis.prototype.xadd = xadd;
+    // $FlowFixMe
+    Redis.prototype.xread = xread;
+    cache = new Redis({host, port, lazyConnect: true});
+    return cache;
+  };
+})();
 
 export const publishToStream = (
   redisClient: RedisClient,

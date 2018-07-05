@@ -1,4 +1,6 @@
 import test from "ava";
+import sinon from "sinon";
+import proxyquire from "proxyquire";
 import MockRedis from "ioredis-mock";
 
 import {
@@ -29,6 +31,15 @@ test("redis client implements the stream API", (t) => {
   const redisClient = client("localhost", 6379);
   t.true(typeof redisClient.xadd === "function");
   t.true(typeof redisClient.xread === "function");
+});
+
+test("redis client returns a single client connection across multiple calls", (t) => {
+  const stub = sinon.stub();
+  const redis = proxyquire("../src/redis", {ioredis: stub});
+
+  redis.client("localhost", 6379);
+  redis.client("localhost", 6379);
+  t.is(stub.callCount, 1);
 });
 
 test("poll for next event in a blocking manner", async (t) => {
