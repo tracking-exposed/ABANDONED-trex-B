@@ -1,7 +1,7 @@
 {
   "name": "@tracking-exposed/process-rss",
   "description": "Generate RSS feeds from entity events.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "dist/index.js",
   "license": "GPL-3.0",
   "keywords": [
@@ -24,8 +24,8 @@
     "sinon": "^6.0.1"
   },
   "dependencies": {
-    "@tracking-exposed/data": "0.1.0",
-    "@tracking-exposed/utils": "0.1.0",
+    "@tracking-exposed/data": "0.2.0",
+    "@tracking-exposed/utils": "0.2.0",
     "rss": "^1.2.2"
   }
 }
