@@ -1,0 +1,12 @@
+.widget {
+    display: block;
+    width: 25px;
+    height: 25px;
+    color: black;
+    background: url(./icon.svg);
+    background-size: 16px 16px;
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: 5px;
+    appearance: none;
+}

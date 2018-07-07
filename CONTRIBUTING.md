@@ -72,7 +72,7 @@ Tests are stored associated to the respective package they belong to.
 
 ### Bootstraping a new package
 
-Use the example package in `bootstrap/module` to add a new package. Packages are published under the namespace `@tracking-exposed` and have a module name (e.g. `service-rss`).
+Use the example package in `bootstrap/module` to add a new node library and `bootstrap/widget` to add a new web component. Packages are published under the namespace `@tracking-exposed` and have a module name (e.g. `service-rss`).
 
 ```sh
 $ cp -av bootstrap/module packages/<name>
@@ -92,11 +92,19 @@ $ cp -av bootstrap/module packages/service-abc
 $ find . -type f | grep -v "^\.\/\.git" | xargs sed -i -e "s/module/service-abc/g"
 ```
 
+Or to bootstrap a new widget:
+
+```sh
+$ cp -av bootstrap/widget packages/widget-abc
+$ find . -type f | grep -v "^\.\/\.git" | xargs sed -i -e "s/widget/widget-abc/g"
+```
+
 Make sure to edit and verify the following files before committing:
 
 - `README.md` and add the new package to the `Packages` overview.
 - `packages/<name>/package.json` and make sure the `name`, `repository` and `homepage` are correct and add a `description` and `keywords`.
 - `packages/<name>/README.md`.
+- `webpack.config.js` if package is a widget and edit the `library` field.
 
 ### Making a new release
 

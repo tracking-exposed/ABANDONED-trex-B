@@ -8,10 +8,13 @@
         }
       }
     ],
-    "@babel/preset-flow"
+    "@babel/preset-flow",
+    "@babel/preset-react"
   ],
   "plugins": [
+    ["@babel/plugin-transform-react-jsx", {"pragma": "h"}],
     "@babel/plugin-transform-flow-strip-types",
-    "@babel/plugin-syntax-flow"
+    "@babel/plugin-syntax-flow",
+    "@babel/plugin-proposal-class-properties"
   ]
 }

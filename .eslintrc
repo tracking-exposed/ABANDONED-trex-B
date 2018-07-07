@@ -1,5 +1,10 @@
 {
   "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
   "env": {
     "es6": true,
     "node": true
@@ -10,12 +15,23 @@
     "plugin:import/warnings",
     "plugin:promise/recommended",
     "prettier",
-    "plugin:flowtype/recommended"
+    "plugin:flowtype/recommended",
+    "plugin:react/recommended"
   ],
-  "plugins": ["import", "promise", "prettier", "flowtype", "flowtype-errors"],
+  "plugins": [
+    "import",
+    "promise",
+    "prettier",
+    "flowtype",
+    "flowtype-errors",
+    "react"
+  ],
   "settings": {
     "flowtype": {
       "onlyFilesWithFlowAnnotation": true
+    },
+    "react": {
+      "pragma": "h"
     }
   },
   "rules": {
@@ -23,6 +39,7 @@
     "arrow-parens": "off",
     "object-curly-spacing": "off",
     "no-console": "warn",
+    "class-methods-use-this": "off",
     "comma-dangle": [
       "error",
       {
@@ -37,10 +54,18 @@
     "import/no-extraneous-dependencies": [
       "error",
       {
-        "devDependencies": ["packages/*/test/*.js", "./test-setup.js"]
+        "devDependencies": [
+          "packages/*/test/*.js",
+          "./test-setup.js",
+          "stories/*.js",
+          "bootstrap/**/test/*.js",
+          "webpack.config.js",
+          "postcss.config.js"
+        ]
       }
     ],
     "flowtype-errors/show-errors": 2,
-    "flowtype-errors/show-warnings": 1
+    "flowtype-errors/show-warnings": 1,
+    "react/jsx-filename-extension": [1, {"extensions": [".js", ".jsx"]}]
   }
 }
