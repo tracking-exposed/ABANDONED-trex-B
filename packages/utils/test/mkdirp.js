@@ -7,7 +7,7 @@ import mockFs from "mock-fs";
 import {mkdirP} from "../src";
 
 test("utils mkdirP creates recursively directories", async (t) => {
-  mockFs();
+  mockFs({});
   const dir = path.join(process.cwd(), "some/path/to/dir");
   await mkdirP(dir);
   t.true(fs.statSync(dir).isDirectory());
