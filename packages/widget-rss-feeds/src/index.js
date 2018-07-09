@@ -1,7 +1,6 @@
 // @flow
 /** @jsx h */
 import {h, Component} from "preact";
-import Url from "./components/Url";
 import "./index.css";
 
 type Props = {
@@ -46,10 +45,12 @@ export default class WidgetRssFeeds extends Component<Props, State> {
   handleKeyPress = (event: KeyboardEvent) => {
     const {query, suggestions} = this.state;
     switch (event.keyCode) {
+      // press enter
       case 13: {
         if (query !== "") this.selectSuggestion(query);
         break;
       }
+      // press up or down
       case 40:
       case 38: {
         let index =
@@ -59,6 +60,7 @@ export default class WidgetRssFeeds extends Component<Props, State> {
         this.setState({query: suggestions[index]});
         break;
       }
+      // press escape
       case 27: {
         this.deselectInput();
         this.setState({query: "", suggestions: []});
@@ -89,6 +91,17 @@ export default class WidgetRssFeeds extends Component<Props, State> {
       query,
       suggestions,
     });
+  };
+
+  handleClipboard = (event: Event) => {
+    event.preventDefault();
+    const element = document.createElement("input");
+    const body = document.getElementsByTagName("body")[0];
+    body.append(element);
+    element.value = this.url();
+    element.select();
+    document.execCommand("copy");
+    element.remove();
   };
 
   selectSuggestion(id: string) {
@@ -136,10 +149,23 @@ export default class WidgetRssFeeds extends Component<Props, State> {
   }
 
   filterSuggestions(fn: (string) => boolean) {
-    return this.props.allEntities
+    const {allEntities} = this.props;
+    return allEntities
       .filter(fn)
       .map((entity) => entity.trim().toLowerCase())
       .sort((a, b) => a.localeCompare(b));
+  }
+
+  url() {
+    const {baseUrl} = this.props;
+    const {entities} = this.state;
+    const baseName = entities
+      .map((entity) => entity.trim().toLowerCase())
+      .sort((a, b) => a.localeCompare(b))
+      .join("+");
+    return `${
+      baseUrl.slice(-1) === "/" ? baseUrl.slice(0, -1) : baseUrl
+    }/${baseName}.xml`;
   }
 
   renderSuggestions() {
@@ -186,11 +212,23 @@ export default class WidgetRssFeeds extends Component<Props, State> {
     );
   }
 
-  render({baseUrl, allEntities}: Props, {query, suggestions, entities}: State) {
+  renderUrl() {
+    return (
+      <div className="flex">
+        <input className="w-75" value={this.url()} disabled />
+        <button
+          className="feeds-rss-copy-icon w3 h2"
+          onClick={this.handleClipboard}
+        />
+      </div>
+    );
+  }
+
+  render({allEntities}: Props, {query, suggestions, entities}: State) {
     return (
       <div className="flex flex-column relative">
-        {allEntities.length > 0 ? <Url {...{baseUrl, entities}} /> : ""}
-        {entities.length > 0 ? this.renderEntities() : <div />}
+        {entities.length > 0 ? this.renderUrl() : ""}
+        {entities.length > 0 ? this.renderEntities() : ""}
         <label className="blue" data-role="label">
           {allEntities.length > 0
             ? "Choose entities:"

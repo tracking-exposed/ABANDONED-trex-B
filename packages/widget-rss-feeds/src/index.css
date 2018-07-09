@@ -4,3 +4,10 @@
     background-repeat: no-repeat;
     background-position-x: 15px;
 }
+
+.feeds-rss-copy-icon {
+    background: url(./clipboard-list-solid.svg);
+    background-size: 25px 25px;
+    background-repeat: no-repeat;
+    background-position-x: 15px;
+}
