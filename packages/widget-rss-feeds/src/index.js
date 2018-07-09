@@ -108,7 +108,9 @@ export default class WidgetRssFeeds extends Component<Props, State> {
     const {allEntities} = this.props;
     const {entities} = this.state;
     this.deselectInput();
-    if (allEntities.indexOf(key) < 0) return;
+    // FIXME: Better convert allEntities to lower case once and not everytime
+    // a suggestion is added. Maybe move to the constructor if possible?
+    if (allEntities.map((e) => e.trim().toLowerCase()).indexOf(key) < 0) return;
     this.setState({
       query: "",
       entities: Array.from(new Set(entities.concat([key]))).sort((a, b) =>
