@@ -200,7 +200,7 @@ export default class WidgetRssFeeds extends Component<Props, State> {
           data-role="input"
           name="feeds-q"
           className="input-reset br4-l bb b--white-20 pb0"
-          disabled={allEntities.length > 0}
+          disabled={allEntities.length === 0}
           // eslint-disable-next-line no-return-assign
           ref={(element) => (this.inputElement = element)}
           label=""
