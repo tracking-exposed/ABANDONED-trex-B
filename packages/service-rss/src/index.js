@@ -34,7 +34,18 @@ export default (cfg: ServiceRssCfg) => async (
     send(res, 200, feed);
   } catch (err) {
     if (err.code === "ENOENT") {
-      feed = impressions.toRss(feedUrl, []);
+      const feedHeader = {
+         title: `fbtrex observing: ${feedEntities.join(", ")}`,
+         feed_url: feedUrl,
+         site_url: "https://facebook.tracking.exposed/feed",
+      };
+      feed = impressions.toRss(feedUrl, feedHeader, [{
+        html: {
+          source: "fbtrex RSS α-service",
+          text: "Thanks for subscribing to this RSS, now it will begin to be populated, come back in a minute, and remember: more installation of the browser extention are running, more likely something interesting will be caught, read more on https://facebook.tracking.exposed",
+          permaLink: "https://facebook.tracking.exposed",
+        },
+      }]);
       send(res, 200, feed);
       await entities.storeFeeds(redisClient, feedEntities, feedUrl);
       await entities.publishEntities(redisClient, feedEntities);

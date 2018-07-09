@@ -38,7 +38,11 @@ const processor = async (
     if (items.length === 0) return;
     await writeFile(
       path.join(feedsLocation, url),
-      impressions.toRss(url, items),
+      impressions.toRss(url, {
+        title: `fbtrex observing: ${urlEntities.join(", ")}`,
+        feed_url: url,
+        site_url: 'https://facebook.tracking.exposed/feed',
+      }, items),
     );
   });
 

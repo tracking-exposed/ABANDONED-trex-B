@@ -71,13 +71,19 @@ type Impression = {
   html: HtmlSnippet,
 };
 
+type Header = {
+  title: string,
+  feed_url: string,
+  site_url: string
+};
+
 export const fetch = async (
   mongo: MongoClient,
   id: string,
 ): Promise<Impression | null> => {
-  const impression = await findOneBy(mongo, "impressions", {id});
+  const impression = await findOneBy(mongo, "impressions2", {id});
   if (impression == null) return Promise.resolve(null);
-  const html = await findOneBy(mongo, "htmls", {
+  const html = await findOneBy(mongo, "htmls2", {
     id: impression.htmlId,
   });
 
@@ -90,8 +96,8 @@ export const store = async (
 ): Promise<void> => {
   const {html, ...impression} = data;
   await Promise.all([
-    upsertOne(mongo, "impressions", {id: impression.id}, impression),
-    upsertOne(mongo, "htmls", {id: html.id}, html),
+    upsertOne(mongo, "impressions2", {id: impression.id}, impression),
+    upsertOne(mongo, "htmls2", {id: html.id}, html),
   ]);
 };
 
@@ -99,7 +105,7 @@ export const addEntities = async (
   mongo: MongoClient,
   id: string,
   entities: string[],
-): Promise<void> => addToSet(mongo, "impressions", {id}, "entities", entities);
+): Promise<void> => addToSet(mongo, "impressions2", {id}, "entities", entities);
 
 export const fetchByEntities = async (
   mongo: MongoClient,
@@ -107,24 +113,20 @@ export const fetchByEntities = async (
 ): Promise<Array<Impression>> => {
   const impressions = await findByMember(
     mongo,
-    "impressions",
+    "impressions2",
     "entities",
     entities,
   );
   return Promise.all(
     impressions.map(async (impression) => {
-      const html = await findOneBy(mongo, "htmls", {id: impression.htmlId});
+      const html = await findOneBy(mongo, "htmls2", {id: impression.htmlId});
       return Object.assign({}, impression, {html});
     }),
   );
 };
 
-export const toRss = (url: string, impressions: Impression[]) => {
-  const feed = new RSS({
-    title: "Great RSS feed.",
-    feed_url: url,
-    site_url: "https://tracking.exposed",
-  });
+export const toRss = (url: string, feedHeader: Header,  impressions: Impression[]) => {
+  const feed = new RSS(feedHeader);
   impressions.forEach((impression) => {
     if (
       impression.html != null &&
@@ -132,9 +134,11 @@ export const toRss = (url: string, impressions: Impression[]) => {
       impression.html.text != null
     ) {
       feed.item({
-        title: "Some title",
+        title: impression.html.source != null ? `From ${impression.html.source}` : `Missing author name ${impression.html.permaLink}`,
         description: impression.html.text,
-        url: impression.html.permaLink,
+	// $FlowFixMe
+        url: impression.html.permaLink.startsWith("/") ? `https://www.facebook.com${impression.html.permaLink}` : impression.html.permaLink,
+	// $FlowFixMe
         guid: sha1(impression.html.text),
       });
     }
