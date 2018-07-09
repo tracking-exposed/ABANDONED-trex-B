@@ -17,13 +17,17 @@
   <script src="bundle/index.js"></script>
   <script>
     var render = bundle.default;
-    render({
-      selector: ".preview",
-      defaultProps: undefined,
-      inline: false,
-      clean: false,
-      clientSpecified: false
-    })
+    fetch("all-entities.json")
+      .then(resp => resp.json())
+      .then(data =>
+        render({
+          selector: ".preview",
+          defaultProps: {baseUrl: "https://facebook.tracking.exposed/feeds", allEntities: data},
+          inline: false,
+          clean: false,
+          clientSpecified: false
+        })
+      );
   </script>
 </body>
 </html>
