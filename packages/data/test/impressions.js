@@ -27,11 +27,11 @@ test.beforeEach(async (t) => {
   return Promise.all([
     mongo
       .db()
-      .collection("impressions")
+      .collection("impressions2")
       .insert(impressions.map((o) => Object.assign({}, o))),
     mongo
       .db()
-      .collection("htmls")
+      .collection("htmls2")
       .insert(htmls.map((o) => Object.assign({}, o))),
   ]);
 });
@@ -40,8 +40,8 @@ test.afterEach.always(async (t) => {
   const mongoUri = await t.context.mongod.getConnectionString();
   const mongo = await MongoClient.connect(mongoUri);
   return Promise.all([
-    mongo.db().dropCollection("impressions"),
-    mongo.db().dropCollection("htmls"),
+    mongo.db().dropCollection("impressions2"),
+    mongo.db().dropCollection("htmls2"),
   ]);
 });
 
@@ -74,11 +74,11 @@ test.serial("impressions store creates a new impression", async (t) => {
 
   const impression = await mongo
     .db()
-    .collection("impressions")
+    .collection("impressions2")
     .findOne({id: expected.id}, {projection: {_id: 0}});
   const html = await mongo
     .db()
-    .collection("htmls")
+    .collection("htmls2")
     .findOne({id: expected.htmlId}, {projection: {_id: 0}});
   const result = Object.assign({}, impression, {html});
 
@@ -94,11 +94,11 @@ test.serial("impressions store updates an existing impression", async (t) => {
 
   await mongo
     .db()
-    .collection("impressions")
+    .collection("impressions2")
     .insertOne(Object.assign({}, impression));
   await mongo
     .db()
-    .collection("htmls")
+    .collection("htmls2")
     .insertOne(Object.assign({}, html));
 
   const expectedImpression = Object.assign({}, impression, {xx: chance.guid()});
@@ -111,11 +111,11 @@ test.serial("impressions store updates an existing impression", async (t) => {
 
   const resultImpression = await mongo
     .db()
-    .collection("impressions")
+    .collection("impressions2")
     .findOne({id: impression.id}, {projection: {_id: 0}});
   const resultHtml = await mongo
     .db()
-    .collection("htmls")
+    .collection("htmls2")
     .findOne({id: html.id}, {projection: {_id: 0}});
 
   t.deepEqual(resultImpression, expectedImpression);
@@ -135,7 +135,7 @@ test.serial(
 
     const result = await mongo
       .db()
-      .collection("impressions")
+      .collection("impressions2")
       .findOne({id: impression.id}, {projection: {_id: 0}});
 
     t.deepEqual(result, expected);
@@ -149,7 +149,7 @@ test.serial("impressions addEntities appends a new entity", async (t) => {
 
   const result = await mongo
     .db()
-    .collection("impressions")
+    .collection("impressions2")
     .findOne({id: impressions[0].id}, {projection: {_id: 0}});
 
   t.true(result.entities.includes("one"));
@@ -163,7 +163,7 @@ test.serial(
     const mongo = await MongoClient.connect(mongoUri);
     await mongo
       .db()
-      .collection("impressions")
+      .collection("impressions2")
       .update({id: impressions[0].id}, {entities: ["one", "two"]});
 
     const results = await fetchByEntities(mongo, "one");
@@ -190,7 +190,7 @@ test.serial(
     ];
     await mongo
       .db()
-      .collection("impressions")
+      .collection("impressions2")
       .insert(records);
 
     const results = await fetchByEntities(mongo, ["one", "two"]);
@@ -205,7 +205,7 @@ test.serial("impressions toRss creates an RSS XML", async (t) => {
   const mongoUri = await t.context.mongod.getConnectionString();
   const mongo = await MongoClient.connect(mongoUri);
   const item = await fetch(mongo, impressions[0].id);
-  const feed = toRss("feed.xml", [item]);
+  const feed = toRss("feed.xml", {}, [item]);
   xml2js.parseString(feed, (err, result) => {
     t.falsy(err);
     const {channel} = result.rss;
