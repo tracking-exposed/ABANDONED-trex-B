@@ -2,6 +2,7 @@
 import {send} from "micro";
 import fs from "fs";
 import path from "path";
+import {URL} from "url";
 import {promisify} from "util";
 import {redis, impressions, entities, feeds} from "@tracking-exposed/data";
 import {mkdirP} from "@tracking-exposed/utils";
@@ -22,7 +23,7 @@ export default (cfg: ServiceRssCfg) => async (
   const redisClient = redis.client(cfg.redisHost, cfg.redisPort);
 
   let feed;
-  const feedUrl = feeds.sanitize(req.url);
+  const feedUrl = new URL(req.url).href;
   const feedEntities = feeds.toEntities(feedUrl);
   if (feedEntities.length === 0) return;
 

@@ -36,6 +36,13 @@ test("feeds toEntities returns no entities for invalid URLs", (t) => {
   t.deepEqual(result, []);
 });
 
+test("feeds toEntities decodes url components", (t) => {
+  const url = "%D7%90%D7%95%D7%91%D7%9E%D7%94+elon%20musk.xml";
+  const expected = ["elon musk", "אובמה"];
+  const result = toEntities(url);
+  t.deepEqual(result, expected);
+});
+
 test("feeds toUrl sorts and joins entities into an url", (t) => {
   const entities = ["a", "c", "b"];
   const expected = "a+b+c.xml";

@@ -1,11 +1,14 @@
 // @flow
+import path from "path";
+import {URL} from "url";
+
 export const toEntities = (url: string): string[] => {
-  const match = url.match(/([\w+]*).xml?$/);
-  if (match == null) return [];
-  const [, entities] = match;
-  return Array.from(new Set(entities.split("+"))).sort((a, b) =>
-    a.localeCompare(b),
-  );
+  const u = new URL(`http://will-be-ignored.com/${path.basename(url)}`);
+  if (!/(.*).xml$/.test(u.pathname)) return [];
+  const entities = decodeURIComponent(u.pathname)
+    .replace(/\/(.*)\.xml/, "$1")
+    .split("+");
+  return Array.from(new Set(entities)).sort((a, b) => a.localeCompare(b));
 };
 
 export const toUrl = (entities: string[]): string => {
