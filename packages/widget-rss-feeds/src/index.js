@@ -175,7 +175,7 @@ export default class WidgetRssFeeds extends Component<Props, State> {
   renderSuggestions() {
     const {suggestions, query} = this.state;
     return (
-      <ul className="list pa0 shadow-1 overflow-y-scroll overflow-x-hidden z-999 mh-0">
+      <ul className="list pa0 shadow-1 overflow-y-scroll overflow-x-hidden z-999 mh-0 h5">
         {suggestions.map((suggestion) => (
           <li
             id={suggestion}
