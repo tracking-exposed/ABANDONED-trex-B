@@ -3,7 +3,7 @@ import {basename} from "path";
 import Redis from "ioredis-mock";
 import Chance from "chance";
 
-import {storeFeeds, fetchFeeds, fetchByFeed} from "../src/entities";
+import {storeFeeds, fetchFeeds, fetchByFeed, all} from "../src/entities";
 
 const chance = new Chance();
 
@@ -131,5 +131,28 @@ test("entities fetchByFeed retrieves entities for a given feed url", async (t) =
 test("entities fetchByFeed retrieves an empty array if feed doesn't exist", async (t) => {
   const redis = new Redis();
   const result = await fetchByFeed(redis, "feed");
+  t.deepEqual(result, []);
+});
+
+test("entities all retrieves a list of all known entities", async (t) => {
+  const entities = ["aa", "cc", "bb"];
+  const redis = new Redis({
+    data: entities.reduce(
+      (memo, e) => Object.assign(memo, {[`entities:${e}`]: new Set()}),
+      {},
+    ),
+  });
+
+  const expected = entities.sort((a, b) => a.localeCompare(b));
+  const result = await all(redis);
+
+  t.deepEqual(result, expected);
+});
+
+test("entities all retrieves an empty list if there are no entities", async (t) => {
+  const redis = new Redis();
+
+  const result = await all(redis);
+
   t.deepEqual(result, []);
 });

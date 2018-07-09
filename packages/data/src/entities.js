@@ -62,9 +62,17 @@ export const publishEntities = async (
   );
 };
 
+export const all = async (redisClient: RedisClient): Promise<string[]> => {
+  const keys = await redisClient.keys("entities*");
+  return keys
+    .map((key) => key.replace(/^entities:/, ""))
+    .sort((a, b) => a.localeCompare(b));
+};
+
 export default {
   storeFeeds,
   fetchFeeds,
   fetchByFeed,
   publishEntities,
+  all,
 };
