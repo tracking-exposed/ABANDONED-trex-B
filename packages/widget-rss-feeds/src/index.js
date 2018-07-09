@@ -108,7 +108,7 @@ export default class WidgetRssFeeds extends Component<Props, State> {
     const {allEntities} = this.props;
     const {entities} = this.state;
     this.deselectInput();
-    if (!allEntities.includes(key)) return;
+    if (allEntities.indexOf(key) < 0) return;
     this.setState({
       query: "",
       entities: Array.from(new Set(entities.concat([key]))).sort((a, b) =>
@@ -139,14 +139,14 @@ export default class WidgetRssFeeds extends Component<Props, State> {
     return this.filterSuggestions(
       (entity) =>
         pattern.test(entity.toLowerCase().trim()) &&
-        !entities.includes(entity.toLowerCase().trim()),
+        entities.indexOf(entity.toLowerCase().trim()) < 0,
     );
   }
 
   allSuggestions() {
     const {entities} = this.state;
     return this.filterSuggestions(
-      (entity) => !entities.includes(entity.toLowerCase().trim()),
+      (entity) => entities.indexOf(entity.toLowerCase().trim()) < 0,
     );
   }
 
