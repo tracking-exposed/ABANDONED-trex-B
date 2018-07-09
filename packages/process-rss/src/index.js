@@ -22,6 +22,7 @@ const processor = async (
 ): Promise<void> => {
   const writeFile = promisify(fs.writeFile);
   const feedsLocation = path.join(cfg.dataPath, "feeds");
+  const entitiesLocation = path.join(cfg.dataPath, "all-entities.json");
   const mongoUri = `mongodb://${cfg.mongoHost}:${cfg.mongoPort}/${cfg.mongoDb}`;
   const redisClient = redis.client(cfg.redisHost, cfg.redisPort);
   const mongoClient = await mongo.client(mongoUri);
@@ -40,6 +41,9 @@ const processor = async (
       impressions.toRss(url, items),
     );
   });
+
+  const allEntities = await entities.all(redisClient);
+  await writeFile(entitiesLocation, JSON.stringify(allEntities));
 };
 
 export default processor;
