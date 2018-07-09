@@ -104,24 +104,26 @@ export default class WidgetRssFeeds extends Component<Props, State> {
     element.remove();
   };
 
-  selectSuggestion(id: string) {
+  selectSuggestion(key: string) {
+    const {allEntities} = this.props;
     const {entities} = this.state;
     this.deselectInput();
+    if (!allEntities.includes(key)) return;
     this.setState({
       query: "",
-      entities: Array.from(new Set(entities.concat([id]))).sort((a, b) =>
+      entities: Array.from(new Set(entities.concat([key]))).sort((a, b) =>
         a.localeCompare(b),
       ),
       suggestions: [],
     });
   }
 
-  unselectEntity(id: string) {
+  unselectEntity(key: string) {
     const {entities} = this.state;
     this.deselectInput();
     this.setState({
       entities: Array.from(
-        new Set(entities.filter((entity) => entity !== id)),
+        new Set(entities.filter((entity) => entity !== key)),
       ).sort((a, b) => a.localeCompare(b)),
       suggestions: [],
     });
