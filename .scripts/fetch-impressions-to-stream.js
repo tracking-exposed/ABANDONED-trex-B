@@ -34,6 +34,7 @@ const mongoUri = `mongodb://${mongoHost}:${mongoPort}/${mongoDb}`;
         {
           id: impressionId,
           htmlId: id,
+          visibility: html.visibility,
           html: Object.assign({}, html, {id, impressionId}),
         },
       );
