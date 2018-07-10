@@ -2,7 +2,7 @@
 import {send} from "micro";
 import fs from "fs";
 import path from "path";
-import {URL} from "url";
+import url from "url";
 import {promisify} from "util";
 import {redis, impressions, entities, feeds} from "@tracking-exposed/data";
 import {mkdirP} from "@tracking-exposed/utils";
@@ -23,7 +23,11 @@ export default (cfg: ServiceRssCfg) => async (
   const redisClient = redis.client(cfg.redisHost, cfg.redisPort);
 
   let feed;
-  const feedUrl = new URL(req.url).href;
+  const feedUrl = url.format({
+    protocol: "https",
+    host: req.headers.host,
+    pathname: req.url,
+  });
   const feedEntities = feeds.toEntities(feedUrl);
   if (feedEntities.length === 0) return;
 
@@ -35,17 +39,20 @@ export default (cfg: ServiceRssCfg) => async (
   } catch (err) {
     if (err.code === "ENOENT") {
       const feedHeader = {
-         title: `fbtrex observing: ${feedEntities.join(", ")}`,
-         feed_url: feedUrl,
-         site_url: "https://facebook.tracking.exposed/feed",
+        title: `fbtrex observing: ${feedEntities.join(", ")}`,
+        feed_url: feedUrl,
+        site_url: "https://facebook.tracking.exposed/feed",
       };
-      feed = impressions.toRss(feedUrl, feedHeader, [{
-        html: {
-          source: "fbtrex RSS α-service",
-          text: "Thanks for subscribing to this RSS, now it will begin to be populated, come back in a minute, and remember: more installation of the browser extention are running, more likely something interesting will be caught, read more on https://facebook.tracking.exposed",
-          permaLink: "https://facebook.tracking.exposed",
+      feed = impressions.toRss(feedUrl, feedHeader, [
+        {
+          html: {
+            source: "fbtrex RSS α-service",
+            text:
+              "Thanks for subscribing to this RSS, now it will begin to be populated, come back in a minute, and remember: more installation of the browser extention are running, more likely something interesting will be caught, read more on https://facebook.tracking.exposed",
+            permaLink: "https://facebook.tracking.exposed",
+          },
         },
-      }]);
+      ]);
       send(res, 200, feed);
       await entities.storeFeeds(redisClient, feedEntities, feedUrl);
       await entities.publishEntities(redisClient, feedEntities);
