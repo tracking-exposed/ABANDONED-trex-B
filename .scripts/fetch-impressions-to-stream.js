@@ -27,19 +27,21 @@ const mongoUri = `mongodb://${mongoHost}:${mongoPort}/${mongoDb}`;
 
   console.log(`Fetched ${data.length} impressions`);
 
-  data.forEach(async ({impressionId, id, ...html}) => {
-    const impression = Object.assign(
-      {},
-      {
-        id: impressionId,
-        htmlId: id,
-        html: Object.assign({}, html, {id, impressionId}),
-      },
-    );
-    console.log(impression);
-    await impressions.store(mongoClient, impression);
-    await redis.publishToStream(redisClient, "impressions", {impressionId});
-  });
+  await Promise.all(
+    data.map(async ({impressionId, id, ...html}) => {
+      const impression = Object.assign(
+        {},
+        {
+          id: impressionId,
+          htmlId: id,
+          html: Object.assign({}, html, {id, impressionId}),
+        },
+      );
+      console.log(impression);
+      await impressions.store(mongoClient, impression);
+      await redis.publishToStream(redisClient, "impressions", {impressionId});
+    }),
+  );
 
   process.exit(0);
 })();
