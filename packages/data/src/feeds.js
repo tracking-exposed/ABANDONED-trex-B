@@ -7,7 +7,8 @@ export const toEntities = (url: string): string[] => {
   if (!/(.*).xml$/.test(u.pathname)) return [];
   const entities = decodeURIComponent(u.pathname)
     .replace(/\/(.*)\.xml/, "$1")
-    .split("+");
+    .split("+")
+    .sort((a, b) => a.localeCompare(b));
   return Array.from(new Set(entities)).sort((a, b) => a.localeCompare(b));
 };
 
