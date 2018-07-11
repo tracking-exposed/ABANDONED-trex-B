@@ -137,7 +137,7 @@ export default class WidgetRssFeeds extends Component<Props, State> {
 
   suggestionsForQuery(term: string): string[] {
     const {entities} = this.state;
-    const pattern = new RegExp(`^${term}`);
+    const pattern = new RegExp(`^${term}`, "i");
     return this.filterSuggestions(
       (entity) =>
         pattern.test(entity.toLowerCase().trim()) &&
