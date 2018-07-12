@@ -4,6 +4,8 @@ import path from "path";
 import {promisify} from "util";
 import differenceInMilliseconds from "date-fns/difference_in_milliseconds";
 
+import log from "./log";
+
 export const ageingMemoize = (
   fn: () => mixed,
   ex: number = 0,
@@ -82,9 +84,11 @@ export const mkdirP = async (dir: string): Promise<void> => {
   }
 };
 
+export {default as log} from "./log";
 export default {
   ageingMemoize,
   registerShutdown,
   loadPkg,
   mkdirP,
+  log,
 };
