@@ -24,3 +24,4 @@ dist
 .services.json
 .servicesrc
 bundle
+.process*.cache
