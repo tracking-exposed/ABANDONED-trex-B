@@ -12,6 +12,7 @@
   "homepage": "https://github.com/tracking-exposed/tracking-exposed/tree/master/packages/processor-cli#readme",
   "author": "Christo <christo@cryptodrunks.net>",
   "files": [
+    "bin",
     "dist",
     "src"
   ],

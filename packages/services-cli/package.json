@@ -18,6 +18,7 @@
   "homepage": "https://github.com/tracking-exposed/tracking-exposed/tree/master/packages/services-cli#readme",
   "author": "Christo <christo@cryptodrunks.net>",
   "files": [
+    "bin",
     "dist",
     "src"
   ],
