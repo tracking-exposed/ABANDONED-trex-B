@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.3.0"></a>
+# [0.3.0](https://github.com/tracking-exposed/tracking-exposed/compare/v0.2.0...v0.3.0) (2018-07-31)
+
+
+### Bug Fixes
+
+* **data:** enforce sort order for feeds entities ([cfcc268](https://github.com/tracking-exposed/tracking-exposed/commit/cfcc268))
+* **service-rss:** handle encoded urls gracefully ([f45a71d](https://github.com/tracking-exposed/tracking-exposed/commit/f45a71d))
+
+
+### Features
+
+* **data:** retrieve a list of all entities ([ed2b370](https://github.com/tracking-exposed/tracking-exposed/commit/ed2b370))
+
+
+
+
 <a name="0.2.0"></a>
 # 0.2.0 (2018-07-06)
 

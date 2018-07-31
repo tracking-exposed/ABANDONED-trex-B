@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.3.0"></a>
+# [0.3.0](https://github.com/tracking-exposed/tracking-exposed/compare/v0.2.0...v0.3.0) (2018-07-31)
+
+
+### Features
+
+* **utils:** added simple cli logger ([e2e8d51](https://github.com/tracking-exposed/tracking-exposed/commit/e2e8d51))
+* **widget-rss-feeds:** added rss feed generator widget ([eccd55a](https://github.com/tracking-exposed/tracking-exposed/commit/eccd55a))
+
+
+
+
 <a name="0.2.0"></a>
 # 0.2.0 (2018-07-06)
 

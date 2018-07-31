@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.3.0"></a>
+# [0.3.0](https://github.com/tracking-exposed/tracking-exposed/compare/v0.2.0...v0.3.0) (2018-07-31)
+
+
+### Bug Fixes
+
+* **data:** enforce sort order for feeds entities ([cfcc268](https://github.com/tracking-exposed/tracking-exposed/commit/cfcc268))
+* **script:** set visibility field on impression ([ed4d544](https://github.com/tracking-exposed/tracking-exposed/commit/ed4d544))
+* **scripts:** treat promises right when fetching impressions ([e4e5dee](https://github.com/tracking-exposed/tracking-exposed/commit/e4e5dee))
+* **service-rss:** construct feed url without exception ([9147c43](https://github.com/tracking-exposed/tracking-exposed/commit/9147c43))
+* **service-rss:** handle encoded urls gracefully ([f45a71d](https://github.com/tracking-exposed/tracking-exposed/commit/f45a71d))
+* **service-rss:** handle incoming feed urls better ([912bf08](https://github.com/tracking-exposed/tracking-exposed/commit/912bf08))
+* **widget-rss-feeds:** ignore case when typing entities ([6bcc144](https://github.com/tracking-exposed/tracking-exposed/commit/6bcc144))
+* **widget-rss-feeds:** only disable widget if there are no entities ([5f5dd60](https://github.com/tracking-exposed/tracking-exposed/commit/5f5dd60))
+* **widget-rss-feeds:** treat allEntities lower case ([81034cd](https://github.com/tracking-exposed/tracking-exposed/commit/81034cd))
+* **widget-rss-feeds:** verify that a suggestion is a valid selection ([379115a](https://github.com/tracking-exposed/tracking-exposed/commit/379115a))
+
+
+### Features
+
+* **data:** retrieve a list of all entities ([ed2b370](https://github.com/tracking-exposed/tracking-exposed/commit/ed2b370))
+* **process-rss:** generate a json file of all entities ([31bd500](https://github.com/tracking-exposed/tracking-exposed/commit/31bd500))
+* **processor-cli:** cache event id across invocations ([9bbd2ef](https://github.com/tracking-exposed/tracking-exposed/commit/9bbd2ef))
+* **scripts:** import script from rest API ([eda6cdd](https://github.com/tracking-exposed/tracking-exposed/commit/eda6cdd))
+* **utils:** added simple cli logger ([e2e8d51](https://github.com/tracking-exposed/tracking-exposed/commit/e2e8d51))
+* **widget:** support for UI widgets ([6cbb229](https://github.com/tracking-exposed/tracking-exposed/commit/6cbb229))
+* **widget-rss-feed:** bootstrap the widget ([ba81c36](https://github.com/tracking-exposed/tracking-exposed/commit/ba81c36))
+* **widget-rss-feeds:** added rss feed generator widget ([eccd55a](https://github.com/tracking-exposed/tracking-exposed/commit/eccd55a))
+* **widget-rss-feeds:** fetch all entities in the example index ([e1daa9b](https://github.com/tracking-exposed/tracking-exposed/commit/e1daa9b))
+
+
+
+
 <a name="0.2.0"></a>
 # 0.2.0 (2018-07-06)
 

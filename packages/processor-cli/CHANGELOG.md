@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.3.0"></a>
+# [0.3.0](https://github.com/tracking-exposed/tracking-exposed/compare/v0.2.0...v0.3.0) (2018-07-31)
+
+
+### Features
+
+* **processor-cli:** cache event id across invocations ([9bbd2ef](https://github.com/tracking-exposed/tracking-exposed/commit/9bbd2ef))
+
+
+
+
 <a name="0.2.0"></a>
 # 0.2.0 (2018-07-06)
 
