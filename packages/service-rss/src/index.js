@@ -2,7 +2,6 @@
 import {send} from "micro";
 import fs from "fs";
 import path from "path";
-import url from "url";
 import {promisify} from "util";
 import {redis, impressions, entities, feeds} from "@tracking-exposed/data";
 import {mkdirP} from "@tracking-exposed/utils";
@@ -23,15 +22,15 @@ export default (cfg: ServiceRssCfg) => async (
   const redisClient = redis.client(cfg.redisHost, cfg.redisPort);
 
   let feed;
-  const feedUrl = url.format({
-    protocol: "https",
-    host: req.headers.host,
-    pathname: req.url,
-  });
-  const feedEntities = feeds.toEntities(feedUrl);
-  if (feedEntities.length === 0) return;
 
-  const feedLocation = path.join(cfg.dataPath, "feeds", feedUrl);
+  const feedEntities = feeds.toEntities(req.url);
+  const feedLocation = path.join(
+    cfg.dataPath,
+    "feeds",
+    `${feeds.toUrl(feedEntities)}.xml`,
+  );
+
+  if (feedEntities.length === 0) return;
 
   try {
     feed = await readFile(feedLocation);
@@ -40,10 +39,10 @@ export default (cfg: ServiceRssCfg) => async (
     if (err.code === "ENOENT") {
       const feedHeader = {
         title: `fbtrex observing: ${feedEntities.join(", ")}`,
-        feed_url: feedUrl,
-        site_url: "https://facebook.tracking.exposed/feed",
+        feed_url: req.url,
+        site_url: "https://facebook.tracking.exposed/feeds",
       };
-      feed = impressions.toRss(feedUrl, feedHeader, [
+      feed = impressions.toRss(req.url, feedHeader, [
         {
           html: {
             source: "fbtrex RSS α-service",
@@ -54,7 +53,7 @@ export default (cfg: ServiceRssCfg) => async (
         },
       ]);
       send(res, 200, feed);
-      await entities.storeFeeds(redisClient, feedEntities, feedUrl);
+      await entities.storeFeeds(redisClient, feedEntities, req.url);
       await entities.publishEntities(redisClient, feedEntities);
       await mkdirP(path.dirname(feedLocation));
       await writeFile(feedLocation, feed);
