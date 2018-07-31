@@ -35,6 +35,7 @@ export default async (opts: {[string]: mixed} = {}) => {
       throw err;
     }
   }
+  // eslint-disable-next-line no-console
   console.info(`Polling events since "${id}"`);
 
   runForever(async () => {
