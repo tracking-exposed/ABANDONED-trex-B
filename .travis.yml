@@ -1,20 +1,20 @@
 language: node_js
 node_js:
-  - lts/*
+- lts/*
 cache:
   directories:
-    - node_modules
-    - $HOME/.mongodb-binaries
+  - node_modules
+  - "$HOME/.mongodb-binaries"
 env:
   global:
-    secure: laRiVUTV5mTxHXoo/Jn4o20Mja587OnP/Csxrxs4mpHjLM7xac53lz/nGicOruHJVBRsbTjBjk+9RgQMW7uNWYrzt5Ed/HkqD/2Fvd3ZA0WpcxyAivCwy1CcIVTCtcLxrMFsNEO7DWgvIGh6+JiSwc0HbfsTk7kNM0LDHPRQapdDxSP2ubYj8GYrYUlpfbq+dhCLSgAPQkPrsCTlNNBdl0cg6RMxxuD1zrHNBALJaUu7sStGzSp20OcWRlENne50+tgeTv1lozxG5Q8PlAU/IW1cypg1aFslMCH4QYjXM0fXs4Q2FkWYxJmabmWfAIWXwIc8w+ld1z7oGtXEFzJbfrEFVBCcL3IuQPsTXkkA6GwKaT41Ys17nxFacKezx68XKBMX9AhuaLyxtTw3hUU63+9dPjUBD3mg7wjOe3AWw3ZXoWiX8YOoryCmQa5vqnhEW4wT2iTeT6/80TiCvTbVsOG9Ww3FFRCTal4qms8LKZODGXrKuFinKF36KqaDLoD7P5BKZmJTfxXTGYluM7VREV4hsIbRJ2XYIqYljna/1lC7oY7SsWKOJ5QWC5xitPMYDyX2x5xqh7v3OwIQh0aXwFDzf67ymOSbjYcMdDtQFFvd/fyqscoDXmAKfC4tLWmwlHlweFuRlg+VcjZguGBHfurIbsa3aLZub4krXws+T5o=
+  - secure: FV/2xKNZ5C61aT4K6cFHtJNuQqK1Sk2xA/NqtJ6Dj0/x0JxsZk42yB7xLHoWSQ5ozbukkZxkuvuS6ta/pg02U7fDebQIrtRSCXXV4No51KPrRwpuekstgUficwrNMaamLU3jxJxTPfx28vT9k89qhai2THT9RNVlYxWbnDcZfmWk24MuPlTpjEP/u8m7jHp+AVQKq6PGo0iW6XSpyu5ayD3T8xiRi90SPrzDupTIBmcWW84loqGMxxf171FlYfJLe0mf56w4X+TU+lq1e5sPwnZdR6yZsTSA7//A3bC9rq75DSiaXjrprtOyTiVVjmM0/unlgyyjbB8ZFO+ZpPnZDAb4mEdmeU4sITCiKEjYUpCVmkrOQuoh24DJIZUzJbioS4HXb4CwVP+OJJDTGASRtft+SPctfVFoxWRe5wLKqtifAgsf4mhNBgVXsyxAm13WfIOe/T170OuoLbFu00PdFXgXu9LVtOJSoTkmRHte+iKaPq6/82ehWja/7r35e1b/VDJS+E+ziygaqUqC3HaMv6ex7/8SzqVLzD1wk1XD8+QIgWsLfhcUEtWIwDJPMafUejMLu2j8WUkmMftBqvKwexVWaXLfqlEMeggQBAOW2DZQ7e6ccGRhgIIdHcQENKNCwR2DZd4nW9/eVOLBftkCjOoxqjMlkG7d8OAVZu1oY08=
 install:
-  - yarn install
-  - yarn bootstrap
+- yarn install
+- yarn bootstrap
 script:
-  - yarn build
+- yarn build
 after_script:
-  - yarn coverage && nyc report --reporter=text-lcov | coveralls
+- yarn coverage && nyc report --reporter=text-lcov | coveralls
 deploy:
   provider: script
   script: bash .scripts/publish
