@@ -10,7 +10,7 @@ const chance = new Chance();
 const genEntity = () =>
   chance.string({
     pool:
-      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()-_~:?#[]",
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()-_~:[]",
   });
 
 test("entities storeFeeds adds a single feed to a single entity", async (t) => {

@@ -30,10 +30,11 @@ test("feeds toEntities accepts full URL strings as input", (t) => {
   t.deepEqual(result, expected);
 });
 
-test("feeds toEntities returns no entities for invalid URLs", (t) => {
+test("feeds toEntities ignores a missing .xml at the end", (t) => {
   const url = "http://host:1234/path/to/a";
+  const expected = ["a"];
   const result = toEntities(url);
-  t.deepEqual(result, []);
+  t.deepEqual(result, expected);
 });
 
 test("feeds toEntities decodes url components", (t) => {
@@ -43,16 +44,22 @@ test("feeds toEntities decodes url components", (t) => {
   t.deepEqual(result, expected);
 });
 
+test("feeds toEntities returns an empty array when there is no URL path", (t) => {
+  const url = "https://host";
+  const result = toEntities(url);
+  t.deepEqual(result, []);
+});
+
 test("feeds toUrl sorts and joins entities into an url", (t) => {
   const entities = ["a", "c", "b"];
-  const expected = "a+b+c.xml";
+  const expected = "a+b+c";
   const result = toUrl(entities);
   t.deepEqual(result, expected);
 });
 
 test("feeds toUrl removes duplicate elements", (t) => {
   const entities = ["a", "a"];
-  const expected = "a.xml";
+  const expected = "a";
   const result = toUrl(entities);
   t.deepEqual(result, expected);
 });
@@ -64,14 +71,14 @@ test("feeds toUrl throws if the entities array is empty", (t) => {
 
 test("feeds sanitize sorts the elements of a feed url", (t) => {
   const url = "a+c+b.xml";
-  const expected = "a+b+c.xml";
+  const expected = "a+b+c";
   const result = sanitize(url);
   t.is(result, expected);
 });
 
 test("feeds sanitize removes duplicate elements", (t) => {
   const url = "a+a.xml";
-  const expected = "a.xml";
+  const expected = "a";
   const result = sanitize(url);
   t.is(result, expected);
 });

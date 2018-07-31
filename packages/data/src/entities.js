@@ -1,5 +1,4 @@
 // @flow
-import {basename} from "path";
 import type RedisClient from "ioredis";
 import {addToSet, fetchSet, publishToStream} from "./redis";
 import {sanitize} from "./feeds";
@@ -24,9 +23,7 @@ export const storeFeeds = async (
   const prettyEntities = (Array.isArray(entities) ? entities : [entities]).map(
     (e) => e.toLowerCase(),
   );
-  const prettyUrls = (Array.isArray(urls) ? urls : [urls]).map((u) =>
-    sanitize(basename(u)),
-  );
+  const prettyUrls = (Array.isArray(urls) ? urls : [urls]).map(sanitize);
 
   // FIXME: Maybe validate urls?
   await Promise.all(
