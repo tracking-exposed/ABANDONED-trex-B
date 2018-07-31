@@ -17,7 +17,7 @@ after_script:
   - yarn coverage && nyc report --reporter=text-lcov | coveralls
 deploy:
   provider: script
-  script: bash script/publish
+  script: bash .scripts/publish
   skip_cleanup: true
   on:
     tags: true
