@@ -1,4 +1,5 @@
 // @flow
+import type {MongoClient} from "mongodb";
 import type RedisClient from "ioredis";
 import {addToSet, fetchSet, publishToStream} from "./redis";
 import {sanitize} from "./feeds";
@@ -59,11 +60,20 @@ export const publishEntities = async (
   );
 };
 
-export const all = async (redisClient: RedisClient): Promise<string[]> => {
-  const keys = await redisClient.keys("entities*");
-  return keys
-    .map((key) => key.replace(/^entities:/, ""))
-    .sort((a, b) => a.localeCompare(b));
+export const all = async (mongoClient: MongoClient): Promise<string[]> => {
+  const docs = await mongoClient
+    .db()
+    .collection("impressions2")
+    .aggregate([
+      {$match: {entities: {$exists: true}}},
+      {$project: {_id: 1, entities: 1, entitiesCnt: {$size: "$entities"}}},
+      {$match: {entitiesCnt: {$gt: 1}}},
+    ])
+    .toArray();
+  const entities = Array.from(
+    new Set(docs.reduce((memo, {entities: es}) => memo.concat(es), [])),
+  );
+  return entities;
 };
 
 export default {

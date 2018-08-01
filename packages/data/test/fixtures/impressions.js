@@ -7,5 +7,6 @@ module.exports = [
     impressionOrder: 1,
     impressionTime: new Date("2016-12-21T20:10:23Z"),
     htmlId: "23c16d7761051855bcef7df89ed2fc6d7880ca6d",
+    entities: ["aa", "bb"],
   },
 ];

@@ -1,9 +1,13 @@
 import test from "ava";
 import {basename} from "path";
 import Redis from "ioredis-mock";
+import {MongoClient} from "mongodb";
+import MongodbMemoryServer from "mongodb-memory-server";
 import Chance from "chance";
 
 import {storeFeeds, fetchFeeds, fetchByFeed, all} from "../src/entities";
+import impressions from "./fixtures/impressions";
+import htmls from "./fixtures/htmls";
 
 const chance = new Chance();
 
@@ -134,25 +138,69 @@ test("entities fetchByFeed retrieves an empty array if feed doesn't exist", asyn
   t.deepEqual(result, []);
 });
 
-test("entities all retrieves a list of all known entities", async (t) => {
-  const entities = ["aa", "cc", "bb"];
-  const redis = new Redis({
-    data: entities.reduce(
-      (memo, e) => Object.assign(memo, {[`entities:${e}`]: new Set()}),
-      {},
-    ),
-  });
+test.serial(
+  "entities all retrieves a list of all known entities",
+  async (t) => {
+    // Setup test
+    const mongod = new MongodbMemoryServer();
+    const mongoUri = await mongod.getConnectionString();
+    const mongo = await MongoClient.connect(mongoUri);
+    await Promise.all([
+      mongo
+        .db()
+        .collection("impressions2")
+        .insert(impressions.map((o) => Object.assign({}, o))),
+      mongo
+        .db()
+        .collection("htmls2")
+        .insert(htmls.map((o) => Object.assign({}, o))),
+    ]);
 
-  const expected = entities.sort((a, b) => a.localeCompare(b));
-  const result = await all(redis);
+    // Run test
+    const expected = ["aa", "bb"];
+    const result = await all(mongo);
+    t.deepEqual(result, expected);
 
-  t.deepEqual(result, expected);
-});
+    // Cleanup after test
+    await Promise.all([
+      mongo.db().dropCollection("impressions2"),
+      mongo.db().dropCollection("htmls2"),
+    ]);
+    mongod.stop();
+  },
+);
 
-test("entities all retrieves an empty list if there are no entities", async (t) => {
-  const redis = new Redis();
+test.serial(
+  "entities all retrieves an empty list if there are no entities",
+  async (t) => {
+    // Setup test
+    const mongod = new MongodbMemoryServer();
+    const mongoUri = await mongod.getConnectionString();
+    const mongo = await MongoClient.connect(mongoUri);
+    await Promise.all([
+      mongo
+        .db()
+        .collection("impressions2")
+        .insert(impressions.map((o) => Object.assign({}, o))),
+      mongo
+        .db()
+        .collection("htmls2")
+        .insert(htmls.map((o) => Object.assign({}, o))),
+    ]);
+    await mongo
+      .db()
+      .collection("impressions2")
+      .update({}, {$unset: {entities: ""}});
 
-  const result = await all(redis);
+    // Run test
+    const result = await all(mongo);
+    t.deepEqual(result, []);
 
-  t.deepEqual(result, []);
-});
+    // Cleanup after test
+    await Promise.all([
+      mongo.db().dropCollection("impressions2"),
+      mongo.db().dropCollection("htmls2"),
+    ]);
+    mongod.stop();
+  },
+);

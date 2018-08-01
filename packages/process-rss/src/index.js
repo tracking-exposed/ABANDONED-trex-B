@@ -38,15 +38,21 @@ const processor = async (
     if (items.length === 0) return;
     await writeFile(
       path.join(feedsLocation, url),
-      impressions.toRss(url, {
-        title: `fbtrex observing: ${urlEntities.join(", ")}`,
-        feed_url: url,
-        site_url: 'https://facebook.tracking.exposed/feed',
-      }, items),
+      impressions.toRss(
+        url,
+        {
+          title: `fbtrex observing: ${urlEntities.join(", ")}`,
+          feed_url: url,
+          site_url: "https://facebook.tracking.exposed/feed",
+        },
+        items,
+      ),
     );
   });
 
-  const allEntities = await entities.all(redisClient);
+  const allEntities = await entities.all(mongoClient);
+  // eslint-disable-next-line no-console
+  console.log(`Caching ${allEntities.length} entities to ${entitiesLocation}.`);
   await writeFile(entitiesLocation, JSON.stringify(allEntities));
 };
 
