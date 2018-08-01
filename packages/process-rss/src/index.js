@@ -30,25 +30,36 @@ const processor = async (
   await mkdirP(feedsLocation);
   const {entity} = data;
   const urls = await entities.fetchFeeds(redisClient, entity);
+  // eslint-disable-next-line no-console
+  console.log(`Fetched ${urls.length} urls for ${entity}.`);
   if (urls.length === 0) return;
 
-  urls.forEach(async (url) => {
-    const urlEntities = await entities.fetchByFeed(redisClient, url);
-    const items = await impressions.fetchByEntities(mongoClient, urlEntities);
-    if (items.length === 0) return;
-    await writeFile(
-      path.join(feedsLocation, url),
-      impressions.toRss(
-        url,
-        {
-          title: `fbtrex observing: ${urlEntities.join(", ")}`,
-          feed_url: url,
-          site_url: "https://facebook.tracking.exposed/feed",
-        },
-        items,
-      ),
-    );
-  });
+  await Promise.all(
+    urls.map(async (url) => {
+      const urlEntities = await entities.fetchByFeed(redisClient, url);
+      const items = await impressions.fetchByEntities(mongoClient, urlEntities);
+      if (items.length === 0) return;
+      const feedLocation = path.join(feedsLocation, `${url}.xml`);
+      await writeFile(
+        feedLocation,
+        impressions.toRss(
+          url,
+          {
+            title: `fbtrex observing: ${urlEntities.join(", ")}`,
+            feed_url: url,
+            site_url: "https://facebook.tracking.exposed/feed",
+          },
+          items,
+        ),
+      );
+      // eslint-disable-next-line no-console
+      console.log(
+        `Generated RSS feed for ${urlEntities.join(
+          ",",
+        )} at ${feedLocation} with ${items.length} items.`,
+      );
+    }),
+  );
 
   const allEntities = await entities.all(mongoClient);
   // eslint-disable-next-line no-console
