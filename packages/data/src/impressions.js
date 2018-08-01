@@ -74,7 +74,8 @@ type Impression = {
 type Header = {
   title: string,
   feed_url: string,
-  site_url: string
+  site_url: string,
+  pubDate: Date,
 };
 
 export const fetch = async (
@@ -125,7 +126,11 @@ export const fetchByEntities = async (
   );
 };
 
-export const toRss = (url: string, feedHeader: Header,  impressions: Impression[]) => {
+export const toRss = (
+  url: string,
+  feedHeader: Header,
+  impressions: Impression[],
+) => {
   const feed = new RSS(feedHeader);
   impressions.forEach((impression) => {
     if (
@@ -134,12 +139,17 @@ export const toRss = (url: string, feedHeader: Header,  impressions: Impression[
       impression.html.text != null
     ) {
       feed.item({
-        title: impression.html.source != null ? `From ${impression.html.source}` : `Missing author name ${impression.html.permaLink}`,
+        title:
+          impression.html.source != null
+            ? `From ${impression.html.source}`
+            : `Missing author name ${impression.html.permaLink}`,
         description: impression.html.text,
-	// $FlowFixMe
-        url: impression.html.permaLink.startsWith("/") ? `https://www.facebook.com${impression.html.permaLink}` : impression.html.permaLink,
-	// $FlowFixMe
+        url:
+          impression.html && impression.html.permaLink.startsWith("/")
+            ? `https://www.facebook.com${impression.html.permaLink}`
+            : impression.html.permaLink,
         guid: sha1(impression.html.text),
+        date: impression.html.savingTime,
       });
     }
   });

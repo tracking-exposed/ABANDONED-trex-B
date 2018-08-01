@@ -48,6 +48,7 @@ const processor = async (
             title: `fbtrex observing: ${urlEntities.join(", ")}`,
             feed_url: url,
             site_url: "https://facebook.tracking.exposed/feed",
+            pubDate: new Date(),
           },
           items,
         ),

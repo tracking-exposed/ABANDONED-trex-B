@@ -41,6 +41,7 @@ export default (cfg: ServiceRssCfg) => async (
         title: `fbtrex observing: ${feedEntities.join(", ")}`,
         feed_url: req.url,
         site_url: "https://facebook.tracking.exposed/feeds",
+        pubDate: new Date(),
       };
       feed = impressions.toRss(req.url, feedHeader, [
         {
@@ -49,6 +50,7 @@ export default (cfg: ServiceRssCfg) => async (
             text:
               "Thanks for subscribing to this RSS, now it will begin to be populated, come back in a minute, and remember: more installation of the browser extention are running, more likely something interesting will be caught, read more on https://facebook.tracking.exposed",
             permaLink: "https://facebook.tracking.exposed",
+            date: new Date(),
           },
         },
       ]);
