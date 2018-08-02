@@ -17,6 +17,7 @@
   "homepage": "https://github.com/tracking-exposed/tracking-exposed/tree/master/packages/widget-rss-feeds#readme",
   "author": "Christo <christo@cryptodrunks.net>",
   "files": [
+    "bundle",
     "dist",
     "src"
   ],

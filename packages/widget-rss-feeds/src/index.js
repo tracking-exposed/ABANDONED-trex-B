@@ -26,6 +26,16 @@ export default class WidgetRssFeeds extends Component<Props, State> {
     query: "",
   };
 
+  constructor(props: Props) {
+    super(
+      Object.assign({}, props, {
+        allEntities: props.allEntities.map((entity) =>
+          entity.trim().toLowerCase(),
+        ),
+      }),
+    );
+  }
+
   inputElement: ?HTMLInputElement;
 
   handleSelect = (key: string, event: Event) => {
@@ -63,7 +73,7 @@ export default class WidgetRssFeeds extends Component<Props, State> {
       // press escape
       case 27: {
         this.deselectInput();
-        this.setState({query: "", suggestions: []});
+        this.handleBlur();
         break;
       }
       default:
@@ -71,11 +81,10 @@ export default class WidgetRssFeeds extends Component<Props, State> {
   };
 
   handleFocus = () => {
-    const {query, suggestions} = this.state;
-    if (query === "" && suggestions.length === 0)
-      this.setState({
-        suggestions: this.allSuggestions(),
-      });
+    const {query} = this.state;
+    this.setState({
+      suggestions: this.suggestionsForQuery(query),
+    });
   };
 
   handleBlur = () => {
@@ -85,8 +94,7 @@ export default class WidgetRssFeeds extends Component<Props, State> {
   handleQueryChange = () => {
     if (!this.inputElement) return;
     const query = this.inputElement.value;
-    const suggestions =
-      query === "" ? this.allSuggestions() : this.suggestionsForQuery(query);
+    const suggestions = this.suggestionsForQuery(query);
     this.setState({
       query,
       suggestions,
@@ -108,9 +116,7 @@ export default class WidgetRssFeeds extends Component<Props, State> {
     const {allEntities} = this.props;
     const {entities} = this.state;
     this.deselectInput();
-    // FIXME: Better convert allEntities to lower case once and not everytime
-    // a suggestion is added. Maybe move to the constructor if possible?
-    if (allEntities.map((e) => e.trim().toLowerCase()).indexOf(key) < 0) return;
+    if (allEntities.indexOf(key) < 0) return;
     this.setState({
       query: "",
       entities: Array.from(new Set(entities.concat([key]))).sort((a, b) =>
@@ -136,37 +142,23 @@ export default class WidgetRssFeeds extends Component<Props, State> {
   }
 
   suggestionsForQuery(term: string): string[] {
-    const {entities} = this.state;
+    if (term.length < 1) return [];
     const pattern = new RegExp(`^${term}`, "i");
-    return this.filterSuggestions(
-      (entity) =>
-        pattern.test(entity.toLowerCase().trim()) &&
-        entities.indexOf(entity.toLowerCase().trim()) < 0,
-    );
-  }
-
-  allSuggestions() {
-    const {entities} = this.state;
-    return this.filterSuggestions(
-      (entity) => entities.indexOf(entity.toLowerCase().trim()) < 0,
-    );
+    return this.filterSuggestions((entity) => pattern.test(entity));
   }
 
   filterSuggestions(fn: (string) => boolean) {
     const {allEntities} = this.props;
-    return allEntities
-      .filter(fn)
-      .map((entity) => entity.trim().toLowerCase())
-      .sort((a, b) => a.localeCompare(b));
+    const {entities} = this.state;
+    return allEntities.filter(
+      (entity) => entities.indexOf(entity) < 0 && fn(entity),
+    );
   }
 
   url() {
     const {baseUrl} = this.props;
     const {entities} = this.state;
-    const baseName = entities
-      .map((entity) => entity.trim().toLowerCase())
-      .sort((a, b) => a.localeCompare(b))
-      .join("+");
+    const baseName = entities.join("+");
     return `${
       baseUrl.slice(-1) === "/" ? baseUrl.slice(0, -1) : baseUrl
     }/${baseName}.xml`;
@@ -245,6 +237,7 @@ export default class WidgetRssFeeds extends Component<Props, State> {
           disabled={allEntities.length === 0}
           // eslint-disable-next-line no-return-assign
           ref={(element) => (this.inputElement = element)}
+          placeholder="Start typing to explore entities."
           label=""
           autoComplete="off"
           spellCheck="false"
