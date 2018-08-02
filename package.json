@@ -27,6 +27,7 @@
     "flow:sources": "for i in packages/*; do flow-copy-source -i README.MD -v $i/src $i/dist; done",
     "lint": "eslint packages/*/test packages/*/src *.config.js test-setup.js",
     "prepublishOnly": "npm run build",
+    "prerelease": "npm run build",
     "release": "lerna publish --yes",
     "storybook": "start-storybook -p 9001 -c .storybook",
     "test": "cross-env NODE_ENV=test ava",
