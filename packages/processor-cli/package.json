@@ -1,7 +1,7 @@
 {
   "name": "@tracking-exposed/processor-cli",
   "description": "Process events from a stream.",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "main": "dist/index.js",
   "bin": {
     "processorctl": "./bin/processorctl.js"
@@ -26,8 +26,8 @@
     "sinon": "^6.0.0"
   },
   "dependencies": {
-    "@tracking-exposed/data": "0.6.0",
-    "@tracking-exposed/utils": "0.6.0",
+    "@tracking-exposed/data": "0.7.0",
+    "@tracking-exposed/utils": "0.7.0",
     "find-up": "^3.0.0",
     "ioredis": "^3.2.2",
     "mongodb": "^3.0.10",
