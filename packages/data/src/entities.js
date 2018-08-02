@@ -72,7 +72,8 @@ export const all = async (mongoClient: MongoClient): Promise<string[]> => {
     .toArray();
   const entities = Array.from(
     new Set(docs.reduce((memo, {entities: es}) => memo.concat(es), [])),
-  );
+  ).sort((a, b) => a.localeCompare(b));
+
   return entities;
 };
 
