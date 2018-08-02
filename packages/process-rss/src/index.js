@@ -62,6 +62,7 @@ const processor = async (
     }),
   );
 
+  // FIXME: Move the all-entities generation into a separate process.
   const allEntities = await entities.all(mongoClient);
   // eslint-disable-next-line no-console
   console.log(`Caching ${allEntities.length} entities to ${entitiesLocation}.`);
