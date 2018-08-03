@@ -46,7 +46,19 @@ export default async (opts: {[string]: mixed} = {}) => {
         cfg.stream
       }.`,
     );
-    await Promise.all(events.map((event) => processor(event, cfg)));
+
+    await Promise.all(
+      events.map(async (event) => {
+        try {
+          await processor(event, cfg);
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.log(`Error processing event: ${JSON.stringify(event)}`);
+          // eslint-disable-next-line no-console
+          console.log(e);
+        }
+      }),
+    );
 
     const lastEvent = events.slice(-1)[0];
     await writeFile(idCache, lastEvent.id);
