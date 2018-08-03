@@ -1,13 +1,18 @@
 .rss-feeds-entity-icon {
     background: url(./times-circle-solid);
-    background-size: 16px 16px;
+    background-size: 11px 11px;
     background-repeat: no-repeat;
-    background-position-x: 15px;
+    background-position-x: 8px;
+    background-position-y: 2px;
 }
 
 .feeds-rss-copy-icon {
     background: url(./clipboard-list-solid.svg);
-    background-size: 25px 25px;
+    /* background-size: 25px 25px; */
     background-repeat: no-repeat;
-    background-position-x: 15px;
+    background-position-x: 12px;
+}
+
+.entity-tag {
+    height: 2.25rem;
 }

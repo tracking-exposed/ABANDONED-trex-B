@@ -192,15 +192,15 @@ export default class WidgetRssFeeds extends Component<Props, State> {
       <ul className="flex flex-wrap ma0 pa0">
         {entities.map((entity) => (
           <li
-            className="dib ma1 pa1 h2 bg-light-gray br4 mw-100 truncate flex justify-between"
+            className="entity-tag dib ma1 pt1 pr1 f4 bg-light-gray br4 mw-100 truncate flex justify-between"
             id={entity}
             key={entity}
             data-role="selected-entity"
           >
-            <span>{entity}</span>
+            <span className="ml2">{entity}</span>
             <span
               onClick={(event) => this.handleUnselect(entity, event)}
-              className="w2 h2 rss-feeds-entity-icon r0 pointer"
+              className="w2 h2 mt0 mb0 rss-feeds-entity-icon r0 pointer"
             />
           </li>
         ))}
@@ -213,7 +213,7 @@ export default class WidgetRssFeeds extends Component<Props, State> {
       <div className="flex">
         <input className="w-75" value={this.url()} disabled />
         <button
-          className="feeds-rss-copy-icon w3 h2"
+          className="feeds-rss-copy-icon w3 h2 mt0 mb0"
           onClick={this.handleClipboard}
         />
       </div>
