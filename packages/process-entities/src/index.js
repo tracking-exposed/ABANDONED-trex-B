@@ -28,6 +28,7 @@ const processor = async (
   if (
     impression &&
     impression.visibility === "public" &&
+    impression.html &&
     impression.html.text
   ) {
     const annotations = await extractEntities(
